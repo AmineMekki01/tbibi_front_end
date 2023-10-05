@@ -1,0 +1,46 @@
+import React from 'react';
+import { CardContainer, TopSection, DoctorImage, NameSpecialtyContainer, DoctorName, DoctorSpecialty, InfoContainer, DoctorInfo, DoctorRating, ButtonContainer, ActionLink, VerticalLine, RatingContainer, NumberOfRaters
+} from './DoctorCard.styles';
+
+const DoctorCard = ({
+  first_name,
+  last_name,
+  specialty,
+  years_experience,
+  doctor_rating,
+  location,
+  imageUrl,
+  number_of_raters,
+}) => {
+  return (
+    <CardContainer>
+      <TopSection>
+        <DoctorImage src={require("./../../../assets/images/profile_photo.jpeg")} alt={`${first_name} ${last_name}`} />
+        <NameSpecialtyContainer>
+          <DoctorName>{`${first_name} ${last_name}`}</DoctorName>
+          <DoctorSpecialty>{specialty}</DoctorSpecialty>
+        </NameSpecialtyContainer>
+      </TopSection>
+      <InfoContainer>
+        <div>
+          <DoctorInfo>{`Experience: ${years_experience} years`}</DoctorInfo>
+          <DoctorInfo>{`Location: ${location}`}</DoctorInfo>
+        </div>
+        <RatingContainer>
+          <DoctorInfo>
+            Rating: <DoctorRating>{doctor_rating}</DoctorRating>
+          </DoctorInfo>
+          <NumberOfRaters>({number_of_raters} raters)</NumberOfRaters>
+        </RatingContainer>
+      </InfoContainer>
+      <ButtonContainer>
+          <ActionLink href="#" onClick={() => alert('Share Profile')}>Share</ActionLink>
+          <VerticalLine />
+          <ActionLink href="#" onClick={() => alert('Go to Doctor Profile')}>Profile</ActionLink>
+        </ButtonContainer>
+    </CardContainer>
+  );
+};
+
+
+export default DoctorCard;
