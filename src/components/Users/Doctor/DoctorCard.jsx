@@ -1,7 +1,7 @@
 import React from 'react';
 import { CardContainer, TopSection, DoctorImage, NameSpecialtyContainer, DoctorName, DoctorSpecialty, InfoContainer, DoctorInfo, DoctorRating, ButtonContainer, ActionLink, VerticalLine, RatingContainer, NumberOfRaters
 } from './DoctorCard.styles';
-
+import { Link } from 'react-router-dom';
 const DoctorCard = ({
   first_name,
   last_name,
@@ -11,6 +11,7 @@ const DoctorCard = ({
   location,
   imageUrl,
   number_of_raters,
+  doctor_user_name
 }) => {
   return (
     <CardContainer>
@@ -36,8 +37,10 @@ const DoctorCard = ({
       <ButtonContainer>
           <ActionLink href="#" onClick={() => alert('Share Profile')}>Share</ActionLink>
           <VerticalLine />
-          <ActionLink href="#" onClick={() => alert('Go to Doctor Profile')}>Profile</ActionLink>
-        </ButtonContainer>
+          <Link to={`/ProfilePage/${doctor_user_name}`}>
+            <ActionLink>Profile</ActionLink>
+          </Link>
+      </ButtonContainer>
     </CardContainer>
   );
 };

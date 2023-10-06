@@ -1,57 +1,91 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Container, Button } from './BookAppointmentStyles'
+import { useParams } from 'react-router-dom';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from 'moment-timezone';
 
-const BookAppointment = ({ doctorId }) => {
-  const [availabilities, setAvailabilities] = useState({});
-  
+function BookAppointment({ match }) {
+  const [availability, setAvailability] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState();
+  const { doctorId } = useParams();
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());   const [timeZone, setTimeZone] = useState('');
+  const currentDate = new Date();
+  const maxDate = new Date();
+  maxDate.setDate(currentDate.getDate() + 6);
   useEffect(() => {
-    const fetchAvailabilities = async (day) => {
-      try {
-        const response = await axios.get(`http://localhost:3001/api/v1/availabilities?doctorId=${doctorId}&day=${day}`);
-        return response.data;
-      } catch (error) {
-        console.error('Could not fetch availabilities:', error);
-      }
+    setTimeZone(moment.tz.guess());  // Set the user's time zone
+  }, []);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {  // Step 3: Update useEffect (Optional)
+      setCurrentTime(new Date());
+    }, 60000);  // update every minute
+
+    return () => clearInterval(intervalId);  // cleanup on unmount
+  }, []);
+
+  useEffect(() => {
+    const dateString = selectedDate.toISOString().split('T')[0];
+    const currentTime = new Date().toISOString();
+
+    axios.get(`http://localhost:3001/api/v1/availabilities?doctorId=${doctorId}&day=${dateString}&currentTime=${currentTime}&timeZone=${timeZone}`)
+      .then(response => {
+        setAvailability(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, [doctorId, selectedDate, timeZone]); 
+
+  const handleSlotClick = (slot) => {
+    setSelectedSlot(slot);
+  };
+
+  const handleBookAppointment = () => {
+    const reservationDetails = {
+      start: selectedSlot.availability_start,
+      end: selectedSlot.availability_end,
+      title: 'New Appointment',
+      doctor_id: doctorId,
+      patient_id: '2859758e-6f16-4d8a-a9a1-5cdf28742b16',  
+      availability_id: selectedSlot.availability_id,
     };
 
-    const next7Days = Array.from({ length: 7 }, (_, i) => {
-      const d = new Date();
-      d.setDate(d.getDate() + i);
-      return d.toISOString().split('T')[0]; // returns date as YYYY-MM-DD
+    axios.post('http://localhost:3001/api/v1/reservations', reservationDetails)
+    .then(response => {
+      alert('Appointment booked successfully!');
+    })
+    .catch(error => {
+      console.error(error);
     });
-
-    const fetchAllAvailabilities = async () => {
-      const allAvailabilities = {};
-      for (const day of next7Days) {
-        allAvailabilities[day] = await fetchAvailabilities(day);
-      }
-      setAvailabilities(allAvailabilities);
-    };
-
-    fetchAllAvailabilities();
-  }, [doctorId]);
+  };
 
   return (
-    <Container>
-      <h1>Book an Appointment</h1>
-      {Object.keys(availabilities).map((day) => (
-        <div key={day}>
-          <h3>{day}</h3>
-          <ul>
-            {availabilities[day].map((slot, index) => (
-              <li key={index}>
-                {new Date(slot.availability_start).toLocaleTimeString()} - {new Date(slot.availability_end).toLocaleTimeString()}
-                <Button onClick={() => console.log(`Booking appointment for ${day} at ${slot.availability_start}`)}>
-                  Book
-                </Button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-    </Container>
+    <div>
+      <DatePicker
+        selected={selectedDate}
+        onChange={date => setSelectedDate(date)}
+        dateFormat="yyyy-MM-dd"
+        minDate={currentDate}
+        maxDate={maxDate}  // Set the maximum selectable date
+      />
+        {availability.map(slot => {
+      const localStart = moment(slot.availability_start).tz('Europe/Berlin').format('YYYY-MM-DD HH:mm:ss');  // Adjust time zone
+      const localEnd = moment(slot.availability_end).tz('Europe/Berlin').format('YYYY-MM-DD HH:mm:ss');  // Adjust time zone
+
+      return (
+          <div key={slot.availability_id} onClick={() => handleSlotClick(slot)}>
+              {localStart} - {localEnd}
+          </div>
+      );
+  })}
+      {selectedSlot && (
+        <button onClick={handleBookAppointment}>Book Appointment</button>
+      )}
+    </div>
   );
-};
+}
 
 export default BookAppointment;

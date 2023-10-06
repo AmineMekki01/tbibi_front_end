@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+
 import { Users } from './users';
+
 import DoctorCard from '../Users/Doctor/DoctorCard';
 import { AppContainer, SearchInputContainer, SearchInput, UserList } from './SearchBar.styles';
 
@@ -51,17 +53,10 @@ const SearchBar = () => {
                   doctor_rating={user.rating} 
                   location={user.location}
                   imageUrl={user.image_url}
+                  doctor_user_name={user.doctor_user_name}
                 />
 
-                {/* <CardCom 
-                  first_name={user.first_name} 
-                  last_name={user.last_name} 
-                  specialty={user.specialty} 
-                  years_experience={user.years_of_experience} 
-                  doctor_rating={user.rating} 
-                  location={user.location}
-                  imageUrl={user.image_url}
-                /> */}
+  
               </li>
             );
           })}

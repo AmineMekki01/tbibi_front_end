@@ -1,6 +1,7 @@
 export const Users = [
     {
       "doctor_id": "5d7a484c-451a-4e29-80fd-e962220520d3",
+      "doctor_user_name" : "Soukayna.slimani",
       "first_name": "Soukayna",
       "last_name": "Slimani Mekki",
       "hashed_password": "&3wS$SzTc1HhdXKCbJYWti@1963",
@@ -21,6 +22,7 @@ export const Users = [
     },
     {
       "doctor_id": "fa65df5e-c851-4f83-9313-d6ad59060646",
+      "doctor_user_name" : "Amine.MEKKI",
       "first_name": "Amine",
       "last_name": "MEKKI",
       "hashed_password": "6HO3GUUl&GHhdXKCbJYWti@1963",
@@ -41,6 +43,7 @@ export const Users = [
     },
     {
       "doctor_id": "aca56596-19a6-4887-ad64-387e57236b9c",
+      "doctor_user_name" : "James.Kramer",
       "first_name": "James",
       "last_name": "Kramer",
       "hashed_password": "#WjMfO(#z4HhdXKCbJYWti@1963",
@@ -61,6 +64,7 @@ export const Users = [
     },
     {
       "doctor_id": "17527a7a-de9c-4d9a-b5c8-47afbf7c2a29",
+      "doctor_user_name" : "Brandon.Medina",
       "first_name": "Brandon",
       "last_name": "Medina",
       "hashed_password": "e*1VN&otVqHhdXKCbJYWti@1963",
@@ -81,6 +85,7 @@ export const Users = [
     },
     {
       "doctor_id": "84656703-c999-416a-bde7-d6398269a996",
+      "doctor_user_name" : "Andrea.Arnold",
       "first_name": "Andrea",
       "last_name": "Arnold",
       "hashed_password": "&F$(Drj!S0HhdXKCbJYWti@1963",
@@ -101,6 +106,7 @@ export const Users = [
     },
     {
       "doctor_id": "9c006c47-94c5-4f83-aca7-6ebde5bb3021",
+      "doctor_user_name" : "Tara.Wagner",
       "first_name": "Tara",
       "last_name": "Wagner",
       "hashed_password": "pu89RGGr@#HhdXKCbJYWti@1963",
@@ -121,6 +127,7 @@ export const Users = [
     },
     {
       "doctor_id": "dc2faee6-74f4-47a7-8842-f9847f48b020",
+      "doctor_user_name" : "Jennifer.Garcia",
       "first_name": "Jennifer",
       "last_name": "Garcia",
       "hashed_password": "Jh%^3Obj@5HhdXKCbJYWti@1963",
@@ -141,6 +148,7 @@ export const Users = [
     },
     {
       "doctor_id": "9865c0ba-5da7-4c44-b469-bfcf6e70e958",
+      "doctor_user_name" : "Chad.Underwood",
       "first_name": "Chad",
       "last_name": "Underwood",
       "hashed_password": "w#7GM_Hl$QHhdXKCbJYWti@1963",
@@ -161,6 +169,7 @@ export const Users = [
     },
     {
       "doctor_id": "2be02e96-6a99-4240-9a51-3ecaa530483b",
+      "doctor_user_name" : "Andrew.Herrera",
       "first_name": "Andrew",
       "last_name": "Herrera",
       "hashed_password": "*FIzkSzBx8HhdXKCbJYWti@1963",
@@ -181,6 +190,7 @@ export const Users = [
     },
     {
       "doctor_id": "5cb58fe4-5891-4235-9538-110a7987fbfe",
+      "doctor_user_name" : "Sharon.Smith",
       "first_name": "Sharon",
       "last_name": "Smith",
       "hashed_password": "r6zzdNwI+1HhdXKCbJYWti@1963",
