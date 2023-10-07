@@ -72,12 +72,13 @@ const SearchBar = () => {
           return (
             <li>
               <DoctorCard
+                doctorId={user.doctor_id}
                 first_name={user.first_name} 
                 last_name={user.last_name} 
                 specialty={user.specialty} 
                 years_experience={user.experience_years} 
                 doctor_rating={user.rating_average} 
-                location={user.street_name_number+', '+user.city+', '+ user.zip_code+', '+user.country_name}
+                location={user.location}
                 imageUrl={user.image_url}
                 doctor_user_name={user.doctor_user_name}
               />

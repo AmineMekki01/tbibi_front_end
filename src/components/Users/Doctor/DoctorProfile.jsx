@@ -7,8 +7,6 @@ import {
     CardMedia,
     Typography,
     Button,
-    Breadcrumbs,
-    Link,
     Container,
     Grid,
     List,
@@ -19,7 +17,6 @@ import {
   } from '@mui/material';
   
   import {
-    GitHub as GitHubIcon,
     Instagram as InstagramIcon,
     Twitter as TwitterIcon,
     Facebook as FacebookIcon,

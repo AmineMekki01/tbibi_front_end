@@ -7,24 +7,11 @@ import {
     CardMedia,
     Typography,
     Button,
-    Breadcrumbs,
-    Link,
     Container,
     Grid,
-    List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
+
     LinearProgress,
   } from '@mui/material';
-  
-  import {
-    Instagram as InstagramIcon,
-    Twitter as TwitterIcon,
-    Facebook as FacebookIcon,
-    Language as GlobeIcon,
-  } from '@mui/icons-material';
-  
 
 import profilePhoto from './../../../assets/images/profile_photo.jpeg';
 import { useParams } from 'react-router-dom';

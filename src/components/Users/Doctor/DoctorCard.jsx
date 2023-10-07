@@ -3,6 +3,7 @@ import { CardContainer, TopSection, DoctorImage, NameSpecialtyContainer, DoctorN
 } from './styles/DoctorCardStyles';
 import { Link } from 'react-router-dom';
 const DoctorCard = ({
+  doctorId,
   first_name,
   last_name,
   specialty,
@@ -37,7 +38,7 @@ const DoctorCard = ({
       <ButtonContainer>
           <ActionLink href="#" onClick={() => alert('Share Profile')}>Share</ActionLink>
           <VerticalLine />
-          <Link to={`/ProfilePage/${doctor_user_name}`}>
+          <Link to={`/DoctorProfile/${doctorId}`}>
             <ActionLink>Profile</ActionLink>
           </Link>
       </ButtonContainer>
