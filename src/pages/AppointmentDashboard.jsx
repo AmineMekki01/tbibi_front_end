@@ -9,7 +9,7 @@ export default function Dashboard() {
   useEffect(() => {
     axios.get('http://localhost:3001/api/v1/reservations')
         .then(response => {
-            console.log(response.data);  // Log the response data to the console
+            console.log(response.data);  
             setReservations(response.data);
         })
         .catch(error => {
