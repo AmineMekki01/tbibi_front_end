@@ -1,6 +1,6 @@
 import React from "react";
 import { useRef, errRef, useState, useEffect } from "react";
-import { FactCheck } from "@mui/icons-material";
+import axios from 'axios';
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
 
@@ -8,7 +8,7 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*?[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const PHONE_REGEX = /^[0-9]{10}$/;  
 
-const RegisterPage = () => {
+const DoctorRegisterPage = () => {
 
     const userRef = useRef();
     const errRef = useRef();
@@ -36,6 +36,19 @@ const RegisterPage = () => {
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [birthdate, setBirthdate] = useState('');
+    const [license, setLicenseNumber] = useState('');
+    const [address, setAddress] = useState('');
+    const [city, setCity] = useState('');
+    const [state_name, setStateName] = useState('');
+    const [zipCode, setZipCode] = useState('');
+    const [country_name, setCountryName] = useState('');
+    const [bio, setBio] = useState('');
+    const [specialty, setSpecialty] = useState('');
+    const [experience, setExperience] = useState('');
+    
     useEffect(() => {
         userRef.current.focus();
     }, [])
@@ -72,18 +85,39 @@ const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const v1 = USER_REGEX.test(user);
-        const v2 = PWD_REGEX.test(pwd);
-        const v3 = EMAIL_REGEX.test(email);
-        const v4 = PHONE_REGEX.test(phone);
-    
-        console.log('v1:', v1, 'v2:', v2, 'v3:', v3, 'v4:', v4);  
-        if(!v1 || !v2 || !v3 || !v4) {
+        // validation logic
+        if(!validName || !validPwd || !validMatch || !validEmail || !validPhone) {
             setErrMsg('Invalid Entry');
             return;
         }
-        console.log(user, pwd, matchPwd, email, phone);
-        setSuccess(true);
+        try {
+            const response = await axios.post('http://localhost:3001/api/v1/doctors/register', {
+                user_name: user,
+                password: pwd,
+                email: email,
+                phone: phone,
+                firstName: firstName,
+                lastName: lastName,
+                birthday: birthdate,
+                license: license,
+                address: address,
+                city: city,
+                state_name: state_name,
+                zipCode: zipCode,
+                country_name: country_name,
+                bio: bio,
+                specialty: specialty,
+                experience: experience
+            });
+            if(response.data.success) {
+                setSuccess(true);
+            } else {
+                setErrMsg('Registration failed');
+            }
+        } catch (error) {
+            console.error(error);
+            setErrMsg('Server error');
+        }
     };
   
     return (
@@ -117,7 +151,7 @@ const RegisterPage = () => {
 
                 <form onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor='username'>
+                        <label htmlFor='user_name'>
                             Username :
                             <span className={validName ? "valid" : "hide"}></span>
                             <span className={validName || !user ? "hide" : "invalid"}></span>
@@ -125,7 +159,8 @@ const RegisterPage = () => {
                         <input
                             type='text'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='username'
+                            name='user_name'
+                            placeholder='Choose a username'
                             ref={userRef}
                             autoComplete="off"
                             onChange={(e) => setUser(e.target.value)}
@@ -143,7 +178,8 @@ const RegisterPage = () => {
                         <input
                             type='text'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='firstName'
+                            name='firstName'
+                            onChange={(e) => setFirstName(e.target.value)}
                             placeholder='Your First Name'
                         />
                     </div>
@@ -152,7 +188,8 @@ const RegisterPage = () => {
                         <input
                             type='text'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='lastName'
+                            name='lastName'
+                            onChange={(e) => setLastName(e.target.value)}
                             placeholder='Your Last name'
                         />
                     </div>
@@ -165,7 +202,7 @@ const RegisterPage = () => {
                         <input
                             type='email'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='email'
+                            name='email'
                             placeholder='Your Email'
                             onChange={(e) => setEmail(e.target.value)}
                             onFocus={() => setEmailFocus(true)}
@@ -183,7 +220,7 @@ const RegisterPage = () => {
                         <input
                             type='password'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='password'
+                            name='password'
                             placeholder='Your Password'
                             onChange={(e) => setPwd(e.target.value)}
                             required
@@ -207,7 +244,7 @@ const RegisterPage = () => {
                         <input
                             type='password'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='confirm_pwd'
+                            name='confirm_pwd'
                             placeholder='Your Password'
                             onChange={(e) => setMatchPwd(e.target.value)}
                             required
@@ -225,7 +262,8 @@ const RegisterPage = () => {
                         <input
                             type='date'
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in-out mb-4`}
-                            id='birthdate'
+                            name='birthdate'
+                            onChange={(e) => setBirthdate(e.target.value)}
                             placeholder='Your Birth Date'
                         />
                     </div>
@@ -238,7 +276,7 @@ const RegisterPage = () => {
                             type='text' 
                             className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                             in-out mb-4`}
-                            id='phone'
+                            name='phone'
                             placeholder='Your Phone Number'
                             onChange={(e) => setPhone(e.target.value)}
                             onFocus={() => setPhoneFocus(true)}
@@ -249,12 +287,46 @@ const RegisterPage = () => {
                         </p>
                     </div>
                     <div>
+                        <label htmlFor='license'>License Number : </label>
+                        <input
+                        type='text'
+                        className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
+                        in-out mb-4`}
+                        name='license'
+                        onChange={(e) => setLicenseNumber(e.target.value)}
+                        placeholder='You license number'
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor='specialty'>Specialty : </label>
+                        <input
+                        type='text'
+                        className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
+                        in-out mb-4`}
+                        name='specialty'
+                        onChange={(e) => setSpecialty(e.target.value)}
+                        placeholder='You specialty '
+                        />
+                    </div>
+                    <div>
+                        <label htmlFor='experience'>Experience : </label>
+                        <input
+                        type='text'
+                        className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
+                        in-out mb-4`}
+                        name='experience'
+                        onChange={(e) => setExperience(e.target.value)}
+                        placeholder='You experience in years'
+                        />
+                    </div>
+                    <div>
                         <label htmlFor='address'>Address : </label>
                         <input
                         type='text'
                         className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                         in-out mb-4`}
-                        id='address'
+                        name='address'
+                        onChange={(e) => setAddress(e.target.value)}
                         placeholder='Your Address'
                         />
                     </div>
@@ -264,18 +336,20 @@ const RegisterPage = () => {
                         type='text'
                         className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                         in-out mb-4`}
-                        id='city'
+                        name='city'
+                        onChange={(e) => setCity(e.target.value)}
                         placeholder='Your City'
                         />
                     </div>
                     <div>
-                        <label htmlFor='state'>State :</label>
+                        <label htmlFor='state_name'>State :</label>
                         <input
                         type='text'
                         className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                         in-out mb-4`}
-                        id='state'
-                    placeholder='Your State'
+                        name='state_name'
+                        onChange={(e) => setStateName(e.target.value)}
+                        placeholder='Your State'
                     />
                     </div>
                     <div>
@@ -284,8 +358,8 @@ const RegisterPage = () => {
                         type='text'
                         className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                         in-out mb-4`}   
-
-                        id='zip'    
+                        name='zipCode'   
+                        onChange={(e) => setZipCode(e.target.value)} 
                         placeholder="Your zip code"
                     />              
                     </div>
@@ -295,9 +369,21 @@ const RegisterPage = () => {
                         type='text'
                         className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
                         in-out mb-4`}
-                        id='state'
-                    placeholder='Your State'
+                        name='country_name'
+                        onChange={(e) => setCountryName(e.target.value)}
+                        placeholder='Your State'
                     />
+                    </div>
+                    <div>
+                        <label htmlFor='bio'>Bio : </label>
+                        <textarea
+                        type='text'
+                        className={`w-full p-2 text-primary border rounded-md outline-none text-sm transition duration-150 ease-in
+                        in-out mb-4`}
+                        name='bio'
+                        onChange={(e) => setBio(e.target.value)}
+                        placeholder='Let your patients know about you !'
+                        />
                     </div>
                     <div className='flex justify-center items-center mt-6'>
                         <button
@@ -307,6 +393,8 @@ const RegisterPage = () => {
                             Register
                         </button>
                     </div>
+                    
+                    
                 </form>
             </div>
         </div>
@@ -315,4 +403,8 @@ const RegisterPage = () => {
     );
 };
 
-export default RegisterPage;
+export default DoctorRegisterPage;
+
+
+
+
