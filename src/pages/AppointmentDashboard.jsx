@@ -1,24 +1,37 @@
-import React from 'react'
-import { Title , Container  , Flex , Line } from './../components/Appointments/styles/AppointmentDashboard.styles'
-import CardCom from '../components/Appointments/AppointmentCard'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Title, Container, Flex } from './../components/Appointments/styles/AppointmentDashboard.styles';
+import CardCom from '../components/Appointments/AppointmentCard';
 
 export default function Dashboard() {
-  return (
-    <Container>
-        <Title>My Upcoming Appointments</Title>
-        <Flex>
-          {/* // This dates and durations will be fetched from the appointment table in the database.*/} 
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"} doctor_name={"Amine MEKKI"}  doctor_specialty={"Neurology"}/>  
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Adnane ZERGGIT"}  doctor_specialty={"Internal Medicine"}/>
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Ayoub KASSI"}  doctor_specialty={"Nephrology"}/>
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Amine MEKKI"}  doctor_specialty={"Neurology"}/>  
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Adnane ZERGGIT"}  doctor_specialty={"Internal Medicine"}/>
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Ayoub KASSI"}  doctor_specialty={"Nephrology"}/>
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Amine MEKKI"}  doctor_specialty={"Neurology"}/>  
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Adnane ZERGGIT"}  doctor_specialty={"Internal Medicine"}/>
-          <CardCom duration={30} appointment_start={"24/09/2023 14:00:00"} appointment_finish={"24/09/2023 14:30:00"}  doctor_name={"Ayoub KASSI"}  doctor_specialty={"Nephrology"}/>
-        </Flex>
-    </Container>
-  )
+  const [reservations, setReservations] = useState([]);
 
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/v1/reservations')
+        .then(response => {
+            console.log(response.data);  // Log the response data to the console
+            setReservations(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}, []);
+
+  return (
+      <Container>
+          <Title>My Upcoming Appointments</Title>
+          <Flex>
+              {reservations.map(reservation => (
+                  <CardCom
+                      key={reservation.reservation_id}
+                      duration={30} 
+                      appointment_start={reservation.reservation_start}
+                      appointment_finish={reservation.reservation_end}
+                      doctor_name={reservation.first_name+" "+reservation.last_name} 
+                      doctor_specialty={reservation.specialty} 
+                  />
+              ))}
+          </Flex>
+      </Container>
+  );
 }
