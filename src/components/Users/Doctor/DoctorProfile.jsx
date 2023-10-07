@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import {
     Card,
     CardContent,
@@ -27,22 +29,39 @@ import {
 
 import profilePhoto from './../../../assets/images/profile_photo.jpeg';
 import { useParams } from 'react-router-dom';
+import BookAppointment from '../Patient/BookAppointment'; 
+
+export default function DoctorProfile() {
+
+  const { doctorId } = useParams();
+  const [doctorInfo, setDoctorInfo] = useState(null);
+  const [loading, setLoading] = useState(true);  
+  const [error, setError] = useState(null);
 
 
+  useEffect(() => {
+    axios.get(`http://localhost:3001/api/v1/doctors/${doctorId}`)
+        .then(response => {
+            setDoctorInfo(response.data);
+            setLoading(false);
+        })
+        .catch(error => {
+          console.error(error);
+          setLoading(false);  
+          setError('An error occurred while fetching the doctor information.');
+      });
+}, [doctorId]);
 
-export default function ProfilePage() {
-    const {doctor_user_name} = useParams();
 
-    console.log(doctor_user_name);
   return (
     <section style={{ backgroundColor: '#eee' }}>
+      {loading && <p>Loading...</p>}
+        {error && <p>{error}</p>}
+        {doctorInfo && (
+      <Container className="py-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
 
-
-<Container className="py-5" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-
-
-<Grid container spacing={3} style={{ justifyContent: 'center' }}>
+        <Grid container spacing={3} style={{ justifyContent: 'center' }}>
           <Grid item lg={4}>
             <Card className="mb-4">
               <CardContent className="text-center">
@@ -53,16 +72,19 @@ export default function ProfilePage() {
                   className="rounded-circle"
                   style={{ width: '150px', margin: 'auto' }}
                 />
-                <Typography className="text-muted mb-1" variant="subtitle1">
-                  Full Stack Developer
-                </Typography>
-                <Typography className="text-muted mb-4" variant="body2">
-                  Bay Area, San Francisco, CA
-                </Typography>
-                <div className="d-flex justify-content-center mb-2">
-                  <Button variant="contained">Follow</Button>
-                  <Button variant="outlined" className="ms-1">Message</Button>
-                </div>
+               
+                    <Typography className="text-muted mb-1" variant="subtitle1">
+                      Name : {doctorInfo.first_name} {doctorInfo.last_name}
+                    </Typography>
+                    <Typography className="text-muted mb-1" variant="subtitle1">
+                      Specialty : {doctorInfo.specialty}
+                    </Typography>
+
+                    <div className="d-flex justify-content-center mb-2">
+                      <Button variant="contained">Follow</Button>
+                      <Button variant="outlined" className="ms-1">Message</Button>
+                    </div>
+                 
               </CardContent>
             </Card>
 
@@ -71,7 +93,6 @@ export default function ProfilePage() {
                 <List>
                   {[
                     { icon: <GlobeIcon color="secondary" />, text: 'https://mdbootstrap.com', color: 'text-warning' },
-                    { icon: <GitHubIcon />, text: 'mdbootstrap', color: '#333333' },
                     { icon: <TwitterIcon />, text: '@mdbootstrap', color: '#55acee' },
                     { icon: <InstagramIcon />, text: 'mdbootstrap', color: '#ac2bac' },
                     { icon: <FacebookIcon />, text: 'mdbootstrap', color: '#3b5998' },
@@ -89,22 +110,51 @@ export default function ProfilePage() {
           </Grid>
           <Grid item lg={8}>
                 <Card className="mb-4">
-                    <CardContent>
-                        {['Full Name', 'Email', 'Phone', 'Mobile', 'Address'].map((label, index) => (
-                            <Grid container spacing={3} key={index}>
-                                <Grid item sm={3}>
-                                    <Typography>{label}</Typography>
-                                </Grid>
-                                <Grid item sm={9}>
-                                    <Typography className="text-muted">
-                                        {/* Replace the following line with your data fetching logic */}
-                                        {label} data
-                                    </Typography>
-                                </Grid>
-                                {index < 4 && <hr />}
-                            </Grid>
-                        ))}
-                    </CardContent>
+                  <CardContent>
+                 
+                              <Grid container spacing={3}>
+                                  <Grid item sm={3}>
+                                      <Typography>Full Name</Typography>
+                                  </Grid>
+                                  <Grid item sm={9}>
+                                      <Typography className="text-muted">
+                                          {doctorInfo.first_name} {doctorInfo.last_name}
+                                      </Typography>
+                                  </Grid>
+                              </Grid>
+                              <Grid container spacing={3}>
+                                  <Grid item sm={3}>
+                                      <Typography>Email</Typography>
+                                  </Grid>
+                                  <Grid item sm={9}>
+                                      <Typography className="text-muted">
+                                          {doctorInfo.email}
+                                      </Typography>
+                                  </Grid>
+                              </Grid>
+                              <Grid container spacing={3}>
+                                  <Grid item sm={3}>
+                                      <Typography>Phone</Typography>
+                                  </Grid>
+                                  <Grid item sm={9}>
+                                      <Typography className="text-muted">
+                                          {doctorInfo.phone_number}
+                                      </Typography>
+                                  </Grid>
+                              </Grid>
+                             
+                              <Grid container spacing={3}>
+                                  <Grid item sm={3}>
+                                      <Typography>Address</Typography>
+                                  </Grid>
+                                  <Grid item sm={9}>
+                                      <Typography className="text-muted">
+                                          {doctorInfo.street_name_number} , {doctorInfo.city}, {doctorInfo.state_name} {doctorInfo.zip_code}, {doctorInfo.country}
+                                      </Typography>
+                                  </Grid>
+                              </Grid>
+                  
+                  </CardContent>
                 </Card>
 
                 <Grid container spacing={3}>
@@ -126,9 +176,20 @@ export default function ProfilePage() {
                         </Grid>
                     ))}
                 </Grid>
+
+                
+                <Card>
+                    <CardContent>
+                        <Typography className="center">
+                            Book Appointment
+                        </Typography>
+                        <BookAppointment />
+                    </CardContent>
+                </Card>
             </Grid>
         </Grid>
       </Container>
+      )}
     </section>
   );
 }
