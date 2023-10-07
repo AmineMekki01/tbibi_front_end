@@ -1,6 +1,6 @@
 import React from 'react';
 import { CardContainer, TopSection, DoctorImage, NameSpecialtyContainer, DoctorName, DoctorSpecialty, InfoContainer, DoctorInfo, DoctorRating, ButtonContainer, ActionLink, VerticalLine, RatingContainer, NumberOfRaters
-} from './styles/DoctorCard.styles';
+} from './styles/DoctorCardStyles';
 import { Link } from 'react-router-dom';
 const DoctorCard = ({
   first_name,
