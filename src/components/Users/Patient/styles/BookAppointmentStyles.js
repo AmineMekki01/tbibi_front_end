@@ -4,7 +4,7 @@ export const TimeSlot = styled.div`
   display : flex;
   flex-direction : column; 
   width: fit-content;
-  background-color: rgb(247, 244, 237);
+  background-color: ${({ $isSelected }) => ($isSelected ? 'rgb(247, 244, 237)' : 'white')};
   padding: 20px;
   border: 2px solid ${props => (props.isSelected ? 'blue' : 'gray')};
   border-radius: 8px;

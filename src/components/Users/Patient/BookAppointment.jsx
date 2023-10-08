@@ -1,23 +1,35 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import moment from 'moment-timezone';
 import { TimeSlot, BookAppointmentBlock, TimeSlotContainer, BookingButton} from './styles/BookAppointmentStyles';
+import { AuthContext } from './../../Auth/AuthContext';  
+
+
+
+
 
 function BookAppointment() {
   const [availability, setAvailability] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState();
-  const { doctorId } = useParams();
+  const { doctorId: urlDoctorId } = useParams();  // Renamed to urlDoctorId
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [currentTime, setCurrentTime] = useState(new Date());   const [timeZone, setTimeZone] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());   
+  const [timeZone, setTimeZone] = useState('');
   const currentDate = new Date();
   const maxDate = new Date();
   maxDate.setDate(currentDate.getDate() + 6);
+  const { 
+    setIsLoggedIn, 
+    setDoctorId, 
+    setPatientId, 
+    setUserType, 
+    doctorId: contextDoctorId,  
+    patientId 
+  } = useContext(AuthContext);
   
-
-
   useEffect(() => {
     setTimeZone(moment.tz.guess()); 
   }, []);
@@ -33,15 +45,14 @@ function BookAppointment() {
   useEffect(() => {
     const dateString = selectedDate.toISOString().split('T')[0];
     const currentTime = new Date().toISOString();
-
-    axios.get(`http://localhost:3001/api/v1/availabilities?doctorId=${doctorId}&day=${dateString}&currentTime=${currentTime}&timeZone=${timeZone}`)
+    axios.get(`http://localhost:3001/api/v1/availabilities?doctorId=${urlDoctorId}&day=${dateString}&currentTime=${currentTime}&timeZone=${timeZone}`)
       .then(response => {
         setAvailability(response.data);
       })
       .catch(error => {
         console.error(error);
       });
-  }, [doctorId, selectedDate, timeZone]); 
+  }, [urlDoctorId, selectedDate, timeZone]);
 
   const handleSlotClick = (slot) => {
     setSelectedSlot(slot);
@@ -52,8 +63,8 @@ function BookAppointment() {
       start: selectedSlot.availability_start,
       end: selectedSlot.availability_end,
       title: 'New Appointment',
-      doctor_id: doctorId,
-      patient_id: '2859758e-6f16-4d8a-a9a1-5cdf28742b16',  
+      doctor_id: urlDoctorId,  
+      patient_id: patientId,  
       availability_id: selectedSlot.availability_id,
     };
 
