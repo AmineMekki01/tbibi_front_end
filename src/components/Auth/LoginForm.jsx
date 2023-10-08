@@ -5,13 +5,14 @@ import { ContainerLogin, FormWrapper, Title, RadioButtonContainer, RadioButton, 
 
 const LoginForm = () => {
     const { setIsLoggedIn, setDoctorId, setPatientId, setUserType, doctorId, patientId } = useContext(AuthContext);
+
     
-    const [userType, setUserTypeLocal] = useState('patient'); 
+    const [localUserType, setLocalUserType] = useState('patient'); 
     const navigate = useNavigate();
     
     useEffect(() => {
     
-    }, [userType, doctorId, patientId]);
+    }, [localUserType, doctorId, patientId]);
 
     const handleFormSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +20,7 @@ const LoginForm = () => {
         let email = e.target.elements.email?.value;
         let password = e.target.elements.password?.value;
     
-        const url = userType === 'doctor' 
+        const url = localUserType === 'doctor' 
         ? 'http://localhost:3001/api/v1/doctors/login' 
         : 'http://localhost:3001/api/v1/patients/login';
 
@@ -28,14 +29,15 @@ const LoginForm = () => {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password, userType })  
+        body: JSON.stringify({ email, password, localUserType })  
     });
         const data = await response.json();
         
         if(data.success) {
             localStorage.setItem('token', data.token);
-            setUserType(userType);
-            if(userType === 'doctor') {
+            setUserType(localUserType);   
+            localStorage.setItem('userType', localUserType);
+            if(localUserType === 'doctor') {
                 localStorage.setItem('doctorId', data.doctor_id);
                 setDoctorId(data.doctor_id);  
                 navigate('/patient-appointments');
@@ -61,8 +63,8 @@ const LoginForm = () => {
                                 type="radio"
                                 name="userType"
                                 value="doctor"
-                                checked={userType === 'doctor'}
-                                onChange={() => setUserTypeLocal('doctor')}
+                                checked={localUserType === 'doctor'}
+                                onChange={() => setLocalUserType('doctor')}
                             />
                             <span></span>
                             I am a Doctor
@@ -72,8 +74,8 @@ const LoginForm = () => {
                                 type="radio"
                                 name="userType"
                                 value="patient"
-                                checked={userType === 'patient'}
-                                onChange={() => setUserTypeLocal('patient')}
+                                checked={localUserType === 'patient'}
+                                onChange={() => setLocalUserType('patient')}
                             />
                             <span></span>
                             I am a Patient

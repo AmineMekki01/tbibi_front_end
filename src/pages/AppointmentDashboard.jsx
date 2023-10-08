@@ -1,35 +1,50 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext  } from 'react';
 import axios from 'axios';
 import { Title, Container, Flex } from './../components/Appointments/styles/AppointmentDashboard.styles';
 import CardCom from '../components/Appointments/AppointmentCard';
+import { AuthContext } from './../components/Auth/AuthContext';  
+import moment from 'moment-timezone';
+
 
 export default function Dashboard() {
   const [reservations, setReservations] = useState([]);
+  const { doctorId, patientId, userType } = useContext(AuthContext);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/v1/reservations')
+ 
+    const queryParam = userType === 'doctor' ? `doctor_id=${doctorId}` : `patient_id=${patientId}`;
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+    axios.get(`http://localhost:3001/api/v1/reservations?${queryParam}&timezone=${timezone}`)
+
         .then(response => {
-            console.log(response.data);  
+            console.log(response.data);
             setReservations(response.data);
         })
         .catch(error => {
             console.error(error);
         });
-}, []);
+}, [doctorId, patientId, userType]);
 
   return (
       <Container>
           <Title>My Upcoming Appointments</Title>
           <Flex>
               {reservations.map(reservation => (
+                
+                
                   <CardCom
-                      key={reservation.reservation_id}
-                      duration={30} 
-                      appointment_start={reservation.reservation_start}
-                      appointment_finish={reservation.reservation_end}
-                      doctor_name={reservation.first_name+" "+reservation.last_name} 
-                      doctor_specialty={reservation.specialty} 
+                    key={reservation.reservation_id}
+                    duration={30} 
+                    appointment_start={reservation.reservation_start}
+                    appointment_finish={reservation.reservation_end}
+                    doctor_name={reservation.first_name+" "+reservation.last_name} 
+                    doctor_specialty={reservation.specialty} 
+                    userName={reservation.patient_first_name+" "+reservation.patient_last_name}
+                    userAge={reservation.age}
+                    userType={userType}
                   />
+                  
               ))}
           </Flex>
       </Container>
