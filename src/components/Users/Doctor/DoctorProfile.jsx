@@ -75,10 +75,13 @@ export default function DoctorProfile() {
                 />
                
                     <Typography className="text-muted mb-1" variant="subtitle1">
-                      Name : {doctorInfo.first_name} {doctorInfo.last_name}
+                      Name : {doctorInfo.FirstName} {doctorInfo.LastName}
                     </Typography>
                     <Typography className="text-muted mb-1" variant="subtitle1">
-                      Specialty : {doctorInfo.specialty}
+                      Specialty : {doctorInfo.Specialty}
+                    </Typography>
+                    <Typography className="text-muted mb-1" variant="subtitle1">
+                      Rating : {doctorInfo.RatingScore} ({doctorInfo.RatingCount})
                     </Typography>
 
                     <div className="d-flex justify-content-center mb-2">
@@ -125,7 +128,7 @@ export default function DoctorProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {doctorInfo.first_name} {doctorInfo.last_name}
+                                          {doctorInfo.FirstName} {doctorInfo.LastName}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -135,7 +138,7 @@ export default function DoctorProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {doctorInfo.email}
+                                          {doctorInfo.Email}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -145,7 +148,7 @@ export default function DoctorProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {doctorInfo.phone_number}
+                                          {doctorInfo.PhoneNumber}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -156,7 +159,7 @@ export default function DoctorProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {doctorInfo.street_name_number} , {doctorInfo.city}, {doctorInfo.state_name} {doctorInfo.zip_code}, {doctorInfo.country}
+                                          {doctorInfo.Location}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -168,7 +171,7 @@ export default function DoctorProfile() {
                   <CardContent>
                     <Typography variant="h5" className="mb-3">Get to know me : </Typography>
                     <Typography className="text-muted mb-3">
-                      {doctorInfo.doctor_bio}
+                      {doctorInfo.DoctorBio}
                     </Typography>
                   </CardContent>
                 </Card>
