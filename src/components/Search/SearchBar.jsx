@@ -7,7 +7,6 @@ import { AppContainer, SearchInputContainer, SearchInput, UserList } from './Sea
 const SearchBar = () => {
 
   const [users, setUsers] = useState([]);
-  const [buttonClicked, setButtonClicked] = useState(false);
   const [query, setQuery] = useState('');
   const [specialty, setSpecialty] = useState('');
   const [location, setLocation] = useState('');
@@ -28,12 +27,9 @@ const SearchBar = () => {
   
   useEffect(() => {
     fetchUsers();
-  }, [query, specialty, location]);
+  }, []);
 
-  const handleButtonClick = () => {
-    setButtonClicked(true);
-    fetchUsers();
-  };
+
 
   const handleSearch = () => {
     console.log(`Searching for: ${query}, Specialty: ${specialty}, Location: ${location}`);
@@ -60,27 +56,29 @@ const SearchBar = () => {
           value={location}
           onChange={(e) => setLocation(e.target.value)}
         />
+
     
       </SearchInputContainer>
       { (query || specialty || location) && (
       <UserList className='flex flex-wrap justify-center'>
-        {users.filter((user) => 
-          (user.first_name || '').toLowerCase().startsWith(query.toLowerCase()) &&
-          (user.specialty || '').toLowerCase().startsWith(specialty.toLowerCase()) &&
-          (user.location || '').toLowerCase().includes(location.toLowerCase())
-        ).map((user) => {
+        {users && users.filter((user) => 
+          (user && user.FirstName || '').toLowerCase().startsWith(query.toLowerCase()) &&
+          (user && user.Specialty || '').toLowerCase().startsWith(specialty.toLowerCase()) &&
+          (user && user.Location || '').toLowerCase().includes(location.toLowerCase())
+        ).map((user, index) => {
           return (
-            <li>
+    
+            <li key={index}>
               <DoctorCard
-                doctorId={user.doctor_id}
-                first_name={user.first_name} 
-                last_name={user.last_name} 
-                specialty={user.specialty} 
-                years_experience={user.experience_years} 
-                doctor_rating={user.rating_average} 
-                location={user.location}
+                doctorId={user.DoctorId}
+                first_name={user.FirstName} 
+                last_name={user.LastName} 
+                specialty={user.Specialty} 
+                years_experience={user.Experience} 
+                doctor_rating={user.RatingScore} 
+                location={user.Location}
                 imageUrl={user.image_url}
-                doctor_user_name={user.doctor_user_name}
+                doctor_user_name={user.Username}
               />
             </li>
           );
