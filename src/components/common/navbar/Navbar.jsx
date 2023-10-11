@@ -23,18 +23,18 @@ const MyNavbar = () => {
         { title: 'DashBoard', src: 'Chart', href: '/DashBoard' },
         {
           title: 'Profile',
-          src: 'Chart_fill',
+          src: 'User',
           href: profileHref, 
         },
         { title: 'Appointment', src: 'Calendar', href: '/patient-appointments' },
-        { title: 'MyDocs', src: 'User', href: '/MyDocs' },
+        { title: 'MyDocs', src: 'Folder', href: '/MyDocs' },
         { title: 'Messages ', src: 'Chat', href: '/Messages' },
-        { title: 'ChatBot', src: 'Chat', href: '/ChatBot' },
+        { title: 'ChatBot', src: 'chatbot', href: '/ChatBot' },
       ]
     : [
-        { title: 'Home', src: 'Search', href: '/HomePage' },
-        { title: 'Login', src: 'Chart', href: '/login' },
-        { title: 'Register', src: 'Calendar', href: '/register' },
+        { title: 'Home', src: 'home', href: '/HomePage' },
+        { title: 'Login', src: 'login', href: '/login' },
+        { title: 'Register', src: 'register', href: '/register' },
       ];
 
   return (
@@ -60,7 +60,8 @@ const MyNavbar = () => {
                 {isLoggedIn && (
                     <>
                         <img src={require(`./../../../assets/images/menu_images/Chart.png`)} alt="Logout" />
-                        <a href="/login" onClick={logout}>Logout</a>  {/* Call the logout function when the link is clicked */}
+                        <a href="/login" onClick={logout}>Logout</a>  
+                        
                     </>
                 )}
             </LogoutItem>
