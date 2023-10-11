@@ -11,7 +11,7 @@ import { AuthContext } from './../../Auth/AuthContext';
 
 
 
-function BookAppointment() {
+function BookAppointment({show}) {
   const [availability, setAvailability] = useState([]);
   const [selectedSlot, setSelectedSlot] = useState();
   const { doctorId: urlDoctorId } = useParams();  // Renamed to urlDoctorId
@@ -29,7 +29,7 @@ function BookAppointment() {
     doctorId: contextDoctorId,  
     patientId 
   } = useContext(AuthContext);
-  
+
   useEffect(() => {
     setTimeZone(moment.tz.guess()); 
   }, []);
@@ -103,10 +103,11 @@ function BookAppointment() {
           );
         })}
       </TimeSlotContainer>
-      {selectedSlot && (
-
+      
+      {show && selectedSlot && (
         <BookingButton onClick={handleBookAppointment}>Book Appointment</BookingButton>
       )}
+
     </BookAppointmentBlock>
   );
 }

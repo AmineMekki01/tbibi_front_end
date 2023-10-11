@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useContext} from 'react';
 import axios from 'axios';
 
 import {
@@ -21,12 +21,15 @@ import {
     Twitter as TwitterIcon,
     Facebook as FacebookIcon,
     Language as GlobeIcon,
+    Padding,
   } from '@mui/icons-material';
   
 
 import profilePhoto from './../../../assets/images/profile_photo.jpeg';
 import { useParams } from 'react-router-dom';
 import BookAppointment from '../Patient/BookAppointment'; 
+import { AuthContext } from './../../Auth/AuthContext';  
+
 
 export default function DoctorProfile() {
 
@@ -34,7 +37,7 @@ export default function DoctorProfile() {
   const [doctorInfo, setDoctorInfo] = useState(null);
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null);
-
+  const { userType } = useContext(AuthContext);
 
   useEffect(() => {
     axios.get(`http://localhost:3001/api/v1/doctors/${doctorId}`)
@@ -47,11 +50,12 @@ export default function DoctorProfile() {
           setLoading(false);  
           setError('An error occurred while fetching the doctor information.');
       });
+      
 }, [doctorId]);
 
 
   return (
-    <section style={{ backgroundColor: '#eee' }}>
+    <section style={{ backgroundColor: '#eee', padding: "20px" , height:"100vh"}}>
       {loading && <p>Loading...</p>}
         {error && <p>{error}</p>}
         {doctorInfo && (
@@ -60,7 +64,7 @@ export default function DoctorProfile() {
 
         <Grid container spacing={3} style={{ justifyContent: 'center' }}>
           <Grid item lg={4}>
-            <Card className="mb-4">
+            <Card className="mb-2">
               <CardContent className="text-center">
                 <CardMedia
                   component="img"
@@ -105,10 +109,16 @@ export default function DoctorProfile() {
               </CardContent>
             </Card>
           </Grid>
+          
+          
+          {/* The following grid is for displaying info about the doctor and available appointments as well */}
           <Grid item lg={8}>
-                <Card className="mb-4">
+                
+                {/* The following Card is the container of the  CardContent*/}
+                <Card className='mb-2'>
+
+                  {/* The following CardContent is for displaying the doctors personal info */}
                   <CardContent>
-                 
                               <Grid container spacing={3}>
                                   <Grid item sm={3}>
                                       <Typography>Full Name</Typography>
@@ -154,35 +164,29 @@ export default function DoctorProfile() {
                   </CardContent>
                 </Card>
 
-                <Grid container spacing={3}>
-                    {['Project Status 1', 'Project Status 2'].map((statusTitle, index) => (
-                        <Grid item md={6} key={index}>
-                            <Card className="mb-4 mb-md-0">
-                                <CardContent>
-                                    <Typography className="mb-4">
-                                        <span className="text-primary font-italic me-1">assignment</span> {statusTitle}
-                                    </Typography>
-                                    {['Web Design', 'Website Markup', 'One Page', 'Mobile Template', 'Backend API'].map((task, idx) => (
-                                        <React.Fragment key={idx}>
-                                            <Typography className="mb-1" style={{ fontSize: '.77rem' }}>{task}</Typography>
-                                            <LinearProgress variant="determinate" value={Math.random() * 100} className="mb-3" />
-                                        </React.Fragment>
-                                    ))}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                <Card className='mb-2'>
+                  <CardContent>
+                    <Typography variant="h5" className="mb-3">Get to know me : </Typography>
+                    <Typography className="text-muted mb-3">
+                      {doctorInfo.doctor_bio}
+                    </Typography>
+                  </CardContent>
+                </Card>
 
                 
                 <Card>
                     <CardContent>
-                        <Typography className="center">
+                        <Typography>
                             Book Appointment
                         </Typography>
-                        <BookAppointment />
+                        <Grid spacing={3} className='mt-2'>
+
+                          {userType === 'patient' && <BookAppointment show={true} />}
+                          {userType === 'doctor' && <BookAppointment show={false} />}
+                        </Grid>
                     </CardContent>
                 </Card>
+
             </Grid>
         </Grid>
       </Container>

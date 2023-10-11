@@ -9,7 +9,6 @@ import {
     Button,
     Container,
     Grid,
-
     LinearProgress,
   } from '@mui/material';
 
@@ -20,6 +19,8 @@ import BookAppointment from './BookAppointment';
 export default function PatientProfile() {
 
   const { patientId } = useParams();
+  console.log("Patient ID from React:", patientId);
+
   const [patientInfo, setPatientInfo] = useState(null);
   const [loading, setLoading] = useState(true);  
   const [error, setError] = useState(null);
@@ -34,13 +35,13 @@ export default function PatientProfile() {
         .catch(error => {
           console.error(error);
           setLoading(false);  
-          setError('An error occurred while fetching the doctor information.');
+          setError('An error occurred while fetching the patient information.');
       });
 }, [patientId]);
 
 
   return (
-    <section style={{ backgroundColor: '#eee' }}>
+    <section style={{ backgroundColor: '#eee', padding:"20px", height:"100vh"}}>
       {loading && <p>Loading...</p>}
         {error && <p>{error}</p>}
         {patientInfo && (
@@ -49,7 +50,7 @@ export default function PatientProfile() {
 
         <Grid container spacing={3} style={{ justifyContent: 'center' }}>
           <Grid item lg={4}>
-            <Card className="mb-4">
+            <Card className="mb-2">
               <CardContent className="text-center">
                 <CardMedia
                   component="img"
@@ -60,8 +61,12 @@ export default function PatientProfile() {
                 />
                
                     <Typography className="text-muted mb-1" variant="subtitle1">
-                      Name : {patientInfo.first_name} {patientInfo.last_name}
+                      Name : {patientInfo.FirstName} {patientInfo.LastName}
                     </Typography>
+                    <Typography className="text-muted mb-1" variant="subtitle1">
+                      BirthDay : {patientInfo.BirthDate}
+                    </Typography>
+                    
                     
 
                     <div className="d-flex justify-content-center mb-2">
@@ -75,7 +80,7 @@ export default function PatientProfile() {
           
           </Grid>
           <Grid item lg={8}>
-                <Card className="mb-4">
+                <Card className="mb-2">
                   <CardContent>
                  
                               <Grid container spacing={3}>
@@ -84,7 +89,7 @@ export default function PatientProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {patientInfo.first_name} {patientInfo.last_name}
+                                          {patientInfo.FirstName} {patientInfo.LastName}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -94,7 +99,7 @@ export default function PatientProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {patientInfo.email}
+                                          {patientInfo.Email}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -104,7 +109,7 @@ export default function PatientProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {patientInfo.phone_number}
+                                          {patientInfo.PhoneNumber}
                                       </Typography>
                                   </Grid>
                               </Grid>
@@ -115,18 +120,25 @@ export default function PatientProfile() {
                                   </Grid>
                                   <Grid item sm={9}>
                                       <Typography className="text-muted">
-                                          {patientInfo.street_name_number} , {patientInfo.city}, {patientInfo.state_name} {patientInfo.zip_code}, {patientInfo.country}
+                                          {patientInfo.location}  
                                       </Typography>
                                   </Grid>
                               </Grid>
                   
                   </CardContent>
                 </Card>
-
+                <Card className='mb-2'>
+                  <CardContent>
+                    <Typography variant="h5" className="mb-3">Get to know me : </Typography>
+                    <Typography className="text-muted mb-3">
+                      {patientInfo.PatientBio}
+                    </Typography>
+                  </CardContent>
+                </Card>
                 <Grid container spacing={3}>
                     {['Project Status 1', 'Project Status 2'].map((statusTitle, index) => (
                         <Grid item md={6} key={index}>
-                            <Card className="mb-4 mb-md-0">
+                            <Card className="mb-2 mb-md-0">
                                 <CardContent>
                                     <Typography className="mb-4">
                                         <span className="text-primary font-italic me-1">assignment</span> {statusTitle}
@@ -144,14 +156,7 @@ export default function PatientProfile() {
                 </Grid>
 
                 
-                <Card>
-                    <CardContent>
-                        <Typography className="center">
-                            Book Appointment
-                        </Typography>
-                        <BookAppointment />
-                    </CardContent>
-                </Card>
+            
             </Grid>
         </Grid>
       </Container>
