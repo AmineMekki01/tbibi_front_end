@@ -12,7 +12,12 @@ import {
     Button,
     SuccessSection,
     SuccessWrapper,
-    Note
+    Note,
+    CheckboxContainer,
+    CheckboxLabel,
+    CheckboxInput,
+    CheckboxCustom
+
 } from './styles/LoginRegisterFormStyles';
 
 const USER_REGEX = /^[a-zA-Z][a-zA-Z0-9-_]{3,23}$/;
@@ -25,7 +30,7 @@ const PatientRegisterPage = () => {
 
     const userRef = useRef();
     const errRef = useRef();
-
+    const [sex, setSex] = useState('');
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
@@ -103,19 +108,20 @@ const PatientRegisterPage = () => {
         }
         try {
             const response = await axios.post('http://localhost:3001/api/v1/patients/register', {
-                user_name: user,
-                password: pwd,
-                email: email,
-                phone: phone,
-                firstName: firstName,
-                lastName: lastName,
-                birthday: birthdate,
-                address: address,
-                city: city,
-                state_name: state_name,
-                zipCode: zipCode,
-                country_name: country_name,
-                bio: bio,
+                Username: user,
+                Password: pwd,
+                Email: email,
+                PhoneNumber: phone,
+                FirstName: firstName,
+                LastName: lastName,
+                BirthDate: birthdate,
+                StreetAddress: address,
+                CityName: city,
+                StateName: state_name,
+                ZipCode: zipCode,
+                CountryName: country_name,
+                PatientBio: bio,
+                Sex: sex,
             });
             if(response.data.success) {
                 setSuccess(true);
@@ -158,7 +164,29 @@ const PatientRegisterPage = () => {
                 </p>
 
                 <form onSubmit={handleSubmit}>
-                <div>
+                    <CheckboxContainer>
+                        <CheckboxLabel>
+                            <CheckboxInput 
+                            type="radio" 
+                            name="sex" 
+                            value="Male" 
+                            onChange={(e) => setSex(e.target.value)}
+                            />
+                            <CheckboxCustom></CheckboxCustom>
+                            Male
+                        </CheckboxLabel>
+                        <CheckboxLabel>
+                            <CheckboxInput 
+                            type="radio" 
+                            name="sex" 
+                            value="Female" 
+                            onChange={(e) => setSex(e.target.value)}
+                            />
+                            <CheckboxCustom></CheckboxCustom>
+                            Female
+                        </CheckboxLabel>
+                    </CheckboxContainer>
+                    <div>
                         <label htmlFor='user_name'>
                             Username :
                             <span className={validName ? "valid" : "hide"}></span>

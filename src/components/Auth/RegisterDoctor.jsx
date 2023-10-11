@@ -10,7 +10,11 @@ import {
     Button,
     SuccessSection,
     SuccessWrapper,
-    Note
+    Note,
+    CheckboxContainer,
+    CheckboxLabel,
+    CheckboxInput,
+    CheckboxCustom
 } from './styles/LoginRegisterFormStyles';
 
 
@@ -29,7 +33,7 @@ const DoctorRegisterPage = () => {
     const [user, setUser] = useState('');
     const [validName, setValidName] = useState(false);
     const [userFocus, setUserFocus] = useState(false);
-
+    const [sex, setSex] = useState('');
     const [pwd, setPwd] = useState('');
     const [validPwd, setValidPwd] = useState(false);
     const [pwdFocus, setPwdFocus] = useState(false);
@@ -104,22 +108,24 @@ const DoctorRegisterPage = () => {
         }
         try {
             const response = await axios.post('http://localhost:3001/api/v1/doctors/register', {
-                user_name: user,
-                password: pwd,
-                email: email,
-                phone: phone,
-                firstName: firstName,
-                lastName: lastName,
-                birthday: birthdate,
-                license: license,
-                address: address,
-                city: city,
-                state_name: state_name,
-                zipCode: zipCode,
-                country_name: country_name,
-                bio: bio,
-                specialty: specialty,
-                experience: experience
+                Username: user,
+                Password: pwd,
+                Email: email,
+                PhoneNumber: phone,
+                FirstName: firstName,
+                LastName: lastName,
+                BirthDate: birthdate,
+                MedicalLicense: license,
+                StreetAddress: address,
+                CityName: city,
+                StateName: state_name,
+                ZipCode: zipCode,
+                CountryName: country_name,
+                DoctorBio: bio,
+                Specialty: specialty,
+                Experience: experience,
+                Sex:sex,
+
             });
             if(response.data.success) {
                 setSuccess(true);
@@ -162,6 +168,30 @@ const DoctorRegisterPage = () => {
                 </p>
 
                 <form onSubmit={handleSubmit}>
+
+                    <CheckboxContainer>
+                        <CheckboxLabel>
+                            <CheckboxInput 
+                            type="radio" 
+                            name="sex" 
+                            value="Male" 
+                            onChange={(e) => setSex(e.target.value)}
+                            />
+                            <CheckboxCustom></CheckboxCustom>
+                            Male
+                        </CheckboxLabel>
+                        <CheckboxLabel>
+                            <CheckboxInput 
+                            type="radio" 
+                            name="sex" 
+                            value="Female" 
+                            onChange={(e) => setSex(e.target.value)}
+                            />
+                            <CheckboxCustom></CheckboxCustom>
+                            Female
+                        </CheckboxLabel>
+                    </CheckboxContainer>
+
                     <div>
                         <label htmlFor='user_name'>
                             Username :

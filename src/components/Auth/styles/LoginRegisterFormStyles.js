@@ -141,3 +141,42 @@ export const Note = styled.p`
     color: red;
     display: ${props => props.show ? 'block' : 'none'};
 `;
+
+
+export const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+`;
+
+export const CheckboxLabel = styled.label`
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  cursor: pointer;
+`;
+
+export const CheckboxInput = styled.input`
+  display: none;
+`;
+
+export const CheckboxCustom = styled.span`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+
+  ${CheckboxInput}:checked + &::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    top: 50%;
+    left: 50%;
+    background-color: #007bff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+`;
