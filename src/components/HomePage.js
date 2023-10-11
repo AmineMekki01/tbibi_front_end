@@ -37,29 +37,34 @@ const HeaderMedia = styled.div`
   width: 50%;
   height: 100%;
   img {
-    max-width: 100%;  // Ensures image doesn't overflow container
-    height: auto;     // Maintains aspect ratio
+    max-width: 90%;  
+    height: auto;     
   }
-  // add media queries for responsiveness
   @media (max-width: 550px) {
     width: 30%;
     padding: 10px 10px 10px 0;
-
   }
+
 `;
 
 const MainTitle = styled.p`
   width: 90%;
   margin: 0 auto;
   font-size: 3vw;
-  min-font-size: 2em;
+  @media (max-width: 750px) {
+    font-size: 2rem;
+
+  }
 `;
 
 const Mainpara = styled.p`
   width: 90%;
   margin: 0 auto;
   font-size: 1.5vw;
-  min-font-size: 1em;
+  @media (max-width: 750px) {
+    font-size: 1rem;
+
+  }
 `;
 
 const Services = styled.div`
@@ -84,20 +89,20 @@ const Service = styled.div`
 `;
 
 const ServiceIcon = styled.div`
-  width: 300px;
-  height: 300px;
-  min-width: 300px;
-  min-height: 300px;
-  max-width: 300px;
-  max-height: 300px;
+  width: 200px;
+  height: 200px;
+  min-width: 200px;
+  min-height: 200px;
+  max-width: 200px;
+  max-height: 200px;
   img {
-    max-width: 300px;  
-    height: 300px;     
+    max-width: 200px;  
+    height: 200px;     
   }
 `;
 
 const ServiceTitle = styled.p`
-  max-width: 300px;
+  max-width: 200px;
   font-size: 2rem; 
   font-weight: bold;  
   text-align: center;
@@ -105,7 +110,7 @@ const ServiceTitle = styled.p`
 
 const ServiceDescription = styled.p`
   width: 100%;
-  max-width: 300px;
+  max-width: 200px;
   font-size: 1rem;
   min-font-size: 1rem;
   text-align: center;
