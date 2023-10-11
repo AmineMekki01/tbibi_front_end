@@ -32,13 +32,13 @@ export default function Dashboard() {
           <Flex>
               {reservations.map(reservation => (
                 
-                
+                console.log("rese", reservation),
                   <CardCom
                     key={reservation.reservation_id}
                     duration={30} 
                     appointment_start={reservation.reservation_start}
                     appointment_finish={reservation.reservation_end}
-                    doctor_name={reservation.first_name+" "+reservation.last_name} 
+                    doctor_name={reservation.doctor_first_name+" "+reservation.doctor_last_name} 
                     doctor_specialty={reservation.specialty} 
                     userName={reservation.patient_first_name+" "+reservation.patient_last_name}
                     userAge={reservation.age}
