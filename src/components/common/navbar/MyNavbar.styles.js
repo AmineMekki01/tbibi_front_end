@@ -41,10 +41,16 @@ export const MenuItem = styled.li`
 
     a {
         transition: 0.2s;
-
-        @media (max-width: 549px) {
-        display: none;
+        display: flex;
+        
+        span {
+            margin-left: 0.5rem;
+            @media (max-width: 549px) {
+                display: none;
+                }
         }
+
+        
     }
 `;
 

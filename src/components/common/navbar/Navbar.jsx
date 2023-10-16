@@ -48,19 +48,23 @@ const MyNavbar = () => {
       <MenuList>
         {menus.map((menu, index) => (
           <MenuItem key={index} gap={menu.gap} firstItem={index === 0}>
-            <img
-              src={require(`./../../../assets/images/menu_images/${menu.src}.png`)}
-              alt={menu.title}
-            />
-            <a href={menu.href}>{menu.title}</a>
+            <a href={menu.href}>  
+                <img
+                    src={require(`./../../../assets/images/menu_images/${menu.src}.png`)}
+                    alt={menu.title}
+                />
+                <span>{menu.title}</span>
+            </a>
           </MenuItem>
         ))}
       </MenuList>
       <LogoutItem>
                 {isLoggedIn && (
-                    <>
+                    <>  
+                    <a href="/login" onClick={logout}>
                         <img src={require(`./../../../assets/images/menu_images/Chart.png`)} alt="Logout" />
-                        <a href="/login" onClick={logout}>Logout</a>  
+                        <span>Logout</span>
+                    </a>  
                         
                     </>
                 )}
