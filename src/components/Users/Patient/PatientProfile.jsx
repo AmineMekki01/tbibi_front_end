@@ -21,9 +21,9 @@ export default function PatientProfile() {
   const { patientId } = useParams();
   console.log("Patient ID from React:", patientId);
 
-  const [patientInfo, setPatientInfo] = useState(null);
-  const [loading, setLoading] = useState(true);  
-  const [error, setError] = useState(null);
+  const [patientInfo, setPatientInfo] = useState([]);
+  const [loading, setLoading] = useState([]);
+  const [error, setError] = useState([]);
 
 
   useEffect(() => {

@@ -34,9 +34,9 @@ import { AuthContext } from './../../Auth/AuthContext';
 export default function DoctorProfile() {
 
   const { doctorId } = useParams();
-  const [doctorInfo, setDoctorInfo] = useState(null);
+  const [doctorInfo, setDoctorInfo] = useState([]);
   const [loading, setLoading] = useState(true);  
-  const [error, setError] = useState(null);
+  const [error, setError] = useState([]);
   const { userType } = useContext(AuthContext);
 
   useEffect(() => {
