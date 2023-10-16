@@ -1,4 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
+import {RecoilRoot} from "recoil";
+
+// import './App.scss'
+import Testimonials from "./Testimonals/Testimonals";
 
 import stetoImage from "./../assets/images/no_background_doc_steto.png";
 import stetoImageSized from "./../assets/images/no_small_background_doc_steto.png";
@@ -21,7 +25,6 @@ const HeaderContainer = styled.div`
   justify-content: center;
   align-items: center;
   padding: none;
-  border: 1px solid red;
 `;
 
 const HeaderText = styled.div`
@@ -39,7 +42,8 @@ const HeaderText = styled.div`
 const HeaderMedia = styled.div`
   width: 50%;
   height: 100%;
-  img {
+
+  .header-image {
     max-width: 90%;  
     height: auto;     
   }
@@ -80,7 +84,6 @@ const Services = styled.div`
   padding: 1rem;
   height: 100%;
   min-height: 500px;
-  border: 1px solid blue;
 
 `;
 
@@ -99,7 +102,7 @@ const ServiceIcon = styled.div`
   min-height: 200px;
   max-width: 200px;
   max-height: 200px;
-  img {
+  .service-image {
     max-width: 200px;  
     height: 200px;     
   }
@@ -118,6 +121,32 @@ const ServiceDescription = styled.p`
   font-size: 1rem;
   min-font-size: 1rem;
   text-align: center;
+`;
+
+const ChartsContainer = styled.div`
+  display : flex;
+  flex-direction: column;
+
+`;
+
+const Charts = styled.div`
+  display : flex;
+  align-items: center;
+  @media (max-width: 720px) {
+    flex-direction: column;
+  }
+
+`;
+
+const TestimonialContainer = styled.div`
+  width : 90%;
+  height: 450px;
+  max-width: 600px;
+
+`;
+
+const TestimonialBox = styled.div`
+  height: 100%;
 `;
 
 
@@ -159,7 +188,7 @@ function HomePage() {
         </HeaderText>
 
         <HeaderMedia>
-          <img src={imageSource} alt="Doctor" />
+          <img class="header-image"src={imageSource} alt="Doctor" />
 
         </HeaderMedia>
 
@@ -171,7 +200,7 @@ function HomePage() {
 
         <Service>
           <ServiceIcon>
-            <img src={stetoImageSized} alt="Doctor" />
+            <img class="service-image" src={stetoImageSized} alt="Doctor" />
           </ServiceIcon>
           <ServiceTitle>Service 1</ServiceTitle>
           <ServiceDescription>
@@ -183,7 +212,7 @@ function HomePage() {
 
         <Service>
           <ServiceIcon>
-            <img src={stetoImageSized} alt="Doctor" />
+            <img class="service-image" src={stetoImageSized} alt="Doctor" />
           </ServiceIcon>
           <ServiceTitle>Service 2</ServiceTitle>
           <ServiceDescription>
@@ -195,7 +224,7 @@ function HomePage() {
         
         <Service>
           <ServiceIcon>
-            <img src={stetoImageSized} alt="Doctor" />
+            <img class="service-image" src={stetoImageSized} alt="Doctor" />
           </ServiceIcon>
           <ServiceTitle>Service 3</ServiceTitle>
           <ServiceDescription>
@@ -207,7 +236,7 @@ function HomePage() {
 
         <Service>
           <ServiceIcon>
-            <img src={stetoImageSized} alt="Doctor" />
+            <img class="service-image" src={stetoImageSized} alt="Doctor" />
           </ServiceIcon>
           <ServiceTitle>Service 4</ServiceTitle>
           <ServiceDescription>
@@ -219,7 +248,7 @@ function HomePage() {
 
         <Service>
           <ServiceIcon>
-            <img src={stetoImageSized} alt="Doctor" />
+            <img class="service-image" src={stetoImageSized} alt="Doctor" />
           </ServiceIcon>
           <ServiceTitle>Service 5</ServiceTitle>
           <ServiceDescription>
@@ -230,15 +259,26 @@ function HomePage() {
         </Service>
       </Services>
 
-      <div>
-        <h1 className='flex justify-center items-center text-4xl'>People That Trusts Us</h1>
-        <div className='flex flex-row items-center'>
-          
+      <ChartsContainer>
+        <MainTitle className='flex justify-center'>People That Trusts Us</MainTitle>
+        <Charts>
           <AgePieChart data={patientData} title='Patients' />
           <AgePieChart data={doctorData} title='Doctors' />
-        </div>
-      </div>
+        </Charts>
+      </ChartsContainer>
 
+      <TestimonialContainer>
+
+        <MainTitle className='flex justify-center'>Testimonials</MainTitle>
+        <TestimonialBox >
+          <RecoilRoot>
+            <Suspense fallback={<span>Loading...</span>}>
+            <Testimonials />
+            </Suspense>
+          </RecoilRoot>
+            <p />
+        </TestimonialBox>
+      </TestimonialContainer>
 
     </PageContainer>
   );
