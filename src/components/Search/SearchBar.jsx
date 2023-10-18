@@ -11,29 +11,25 @@ const SearchBar = () => {
   const [specialty, setSpecialty] = useState('');
   const [location, setLocation] = useState('');
 
-  const fetchUsers = async () => {
-    try {
-      let url = 'http://localhost:3001/api/v1/doctors';
-      if (query || specialty || location) {
-        url += `?query=${query}&specialty=${specialty}&location=${location}`;
-      }
-      const response = await axios.get(url);
-      console.log(response.data);
-      setUsers(response.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  
   
   useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        let url = 'http://localhost:3001/api/v1/doctors';
+        if (query || specialty || location) {
+          url += `?query=${query}&specialty=${specialty}&location=${location}`;
+        }
+        const response = await axios.get(url);
+        console.log(response.data);
+        setUsers(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     fetchUsers();
-  }, []);
+  }, [query, specialty, location]);
 
-
-
-  const handleSearch = () => {
-    console.log(`Searching for: ${query}, Specialty: ${specialty}, Location: ${location}`);
-  };
 
   return (
     <AppContainer className="app mt-6">
@@ -62,10 +58,12 @@ const SearchBar = () => {
       { (query || specialty || location) && (
       <UserList className='flex flex-wrap justify-center'>
         {users && users.filter((user) => 
-          (user && user.FirstName || '').toLowerCase().startsWith(query.toLowerCase()) &&
-          (user && user.Specialty || '').toLowerCase().startsWith(specialty.toLowerCase()) &&
-          (user && user.Location || '').toLowerCase().includes(location.toLowerCase())
-        ).map((user, index) => {
+            (
+              ((user && user.FirstName) || '').toLowerCase().startsWith(query.toLowerCase()) &&
+              ((user && user.Specialty) || '').toLowerCase().startsWith(specialty.toLowerCase()) &&
+              ((user && user.Location) || '').toLowerCase().includes(location.toLowerCase())
+            )
+          ).map((user, index) => {
           return (
     
             <li key={index}>

@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Title, Container, Flex } from './../components/Appointments/styles/AppointmentDashboard.styles';
 import CardCom from '../components/Appointments/AppointmentCard';
 import { AuthContext } from './../components/Auth/AuthContext';  
-import moment from 'moment-timezone';
 
 
 export default function Dashboard() {

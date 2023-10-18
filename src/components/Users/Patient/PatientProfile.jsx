@@ -14,7 +14,6 @@ import {
 
 import profilePhoto from './../../../assets/images/profile_photo.jpeg';
 import { useParams } from 'react-router-dom';
-import BookAppointment from './BookAppointment'; 
 
 export default function PatientProfile() {
 
