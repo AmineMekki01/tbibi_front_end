@@ -1,5 +1,5 @@
-import React from 'react';
-import AuthProvider from './components/Auth/AuthContext';
+import React, {useContext, useEffect} from 'react';
+import { AuthContext } from './components/Auth/AuthContext';  
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import LoginForm from './components/Auth/LoginForm';
@@ -14,14 +14,34 @@ import PatientProfile from './components/Users/Patient/PatientProfile';
 import './App.css';
 
 function App() {
+  
+  const authContext = useContext(AuthContext);
+  console.log("authContext : ", authContext);
+
+  const { startLogoutTimer, clearLogoutTimer } = useContext(AuthContext);
+
+  useEffect(() => {
+    const resetTimer = () => {
+      clearLogoutTimer();
+      startLogoutTimer();
+    };
+
+    window.addEventListener("click", resetTimer);
+    window.addEventListener("mousemove", resetTimer);
+
+    return () => {
+      window.removeEventListener("click", resetTimer);
+      window.removeEventListener("mousemove", resetTimer);
+    };
+  }, [startLogoutTimer, clearLogoutTimer]);
+
   return (
-    <AuthProvider>
       <Router>
         <div className="flex">
           <MyNavbar />
           <div className="ml-auto w-full scrollable-div">
             <Routes>
-              <Route path="/HomePage" element={<HomePage />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/login" element={<LoginForm />} />
               <Route path="/register" element={<RegisterPage/>} />
               <Route path="/register-doctor" element={<DoctorRegisterPage />} />
@@ -34,7 +54,6 @@ function App() {
           </div>
         </div>
       </Router>
-    </AuthProvider>
   );
 }
 export default App;

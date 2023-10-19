@@ -19,7 +19,7 @@ const MyNavbar = () => {
 
   const menus = isLoggedIn
     ? [
-        { title: 'Home', src: 'home', href: '/HomePage' },
+        { title: 'Home', src: 'home', href: '/' },
         { title: 'Search', src: 'Search', href: '/SearchBar' },
         { title: 'DashBoard', src: 'Chart', href: '/DashBoard' },
         {title: 'Profile',src: 'User', href: profileHref},
@@ -29,7 +29,7 @@ const MyNavbar = () => {
         { title: 'ChatBot', src: 'chatbot', href: '/ChatBot' },
       ]
     : [
-        { title: 'Home', src: 'home', href: '/HomePage' },
+        { title: 'Home', src: 'home', href: '/' },
         { title: 'Login', src: 'login', href: '/login' },
         { title: 'Register', src: 'register', href: '/register' },
       ];

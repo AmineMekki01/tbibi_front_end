@@ -29,7 +29,7 @@ export default function Dashboard() {
       <Container>
           <Title>My Upcoming Appointments</Title>
           <Flex>
-              {reservations.map(reservation => (
+          {reservations && reservations.map(reservation => (
                 
                 console.log("rese", reservation),
                   <CardCom
