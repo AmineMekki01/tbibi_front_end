@@ -19,13 +19,10 @@ const MyNavbar = () => {
 
   const menus = isLoggedIn
     ? [
+        { title: 'Home', src: 'home', href: '/HomePage' },
         { title: 'Search', src: 'Search', href: '/SearchBar' },
         { title: 'DashBoard', src: 'Chart', href: '/DashBoard' },
-        {
-          title: 'Profile',
-          src: 'User',
-          href: profileHref, 
-        },
+        {title: 'Profile',src: 'User', href: profileHref},
         { title: 'Appointment', src: 'Calendar', href: '/patient-appointments' },
         { title: 'MyDocs', src: 'Folder', href: '/MyDocs' },
         { title: 'Messages ', src: 'Chat', href: '/Messages' },
