@@ -1,70 +1,26 @@
-# Getting Started with Create React App
+# Project name : 
+TBIBI app : Bridging Healthcare Gaps with Technology
+ 
+ Healthcare Management and Diagnostic Assistance Platform (I-HMDA Platform)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Project Description:
 
-## Available Scripts
+The TBIBI app is a web app Platform designed to streamline healthcare access and delivery through a scalable web application. This platform will cater to a diverse user base including individuals, healthcare professionals, and eventually, larger healthcare entities (Clinics and hospitals).
 
-In the project directory, you can run:
+## User/Patient Interface:
 
-### `npm start`
+- Search and Filter Functionality: Users can search for healthcare professionals based on various criteria such as name, location, and specialty. Additionally. i can add a filtering based on reviews, expertise, and other parameters.
+- Detailed Professional Profiles: Upon selecting a healthcare professional, users can view comprehensive profiles containing information such as age, sex, educational background, work experience, and reviews.
+- Appointment Scheduling: Users can schedule appointments based on the available slots in the healthcare professional's calendar. They have the option to choose between on-site visits or telemedicine consultations (zoom is enough but maybe a dedicated service).
+- Telemedicine Integration: For telemedicine consultations, the platform will generate a Zoom call link for starter and then we can think of something more confidential .
+- AI Chatbot Assistant: An AI-driven chatbot assistant will be available for users to describe their symptoms. The assistant will then guide them to the appropriate healthcare professional or facility based on the input.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Doctor Interface:
+- Patient Medical History Access: Healthcare professionals can access their patient's medical history with an AI assistant that summarizes crucial information.
+- Image Classification and Diagnostic Assistance: The platform will host a series of AI models capable of classifying medical imaging by technique and body area. Subsequent models will evaluate the images for normalcy and potential disease classification. For instance, an abdomen image will trigger a specific model trained on abdominal conditions. The AI assistance extends to combining image analysis results with medical history summaries to aid in diagnosis and medical report generation.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Accessibility:
+Voice Command Navigation: A voice command feature will be integrated to enhance accessibility, allowing users to navigate the platform using vocal instructions.  And at scale, an ai that can understand sign language. 
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Future Enhancements:
+As the platform evolves, integration with hospital management systems, and real-time collaborative tools for healthcare professionals can be considered to augment its capabilities.
