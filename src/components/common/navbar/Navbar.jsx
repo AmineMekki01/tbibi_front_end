@@ -11,8 +11,6 @@ import { AuthContext } from './../../Auth/AuthContext';
 const MyNavbar = () => {
   const { isLoggedIn, logout, doctorId, patientId, userType } = useContext(AuthContext); 
 
-  console.log('Is Logged In:', isLoggedIn);
-
   const profileHref = userType === 'doctor'
     ? `/DoctorProfile/${doctorId}`
     : `/PatientProfile/${patientId}`;  
