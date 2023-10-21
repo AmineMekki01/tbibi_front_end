@@ -24,29 +24,32 @@ const AuthProvider = ({ children }) => {
     }, [setDoctorId, setPatientId, setIsLoggedIn, setUserType]);
 
     const startLogoutTimer = useCallback(() => {
-        setLogoutTimer(setTimeout(() => {
+      console.log('startLogoutTimer called');
+      setLogoutTimer(setTimeout(() => {
           logout();
-        }, 15 * 60 * 1000));
-    }, [logout]);
-    
-    const clearLogoutTimer = useCallback(() => {
-        if (logoutTimer) {
+      }, 15 * 60 * 1000));
+  }, [logout]);
+  
+  const clearLogoutTimer = useCallback(() => {
+      console.log('clearLogoutTimer called', logoutTimer);
+      if (logoutTimer) {
           clearTimeout(logoutTimer);
           setLogoutTimer(null);
-        }
-    }, [logoutTimer]);
+      }
+  }, [logoutTimer]);
 
     useEffect(() => {
-        if (isLoggedIn) {
-          startLogoutTimer();
-        } else {
-          clearLogoutTimer();
-        }
-    
-        return () => {
-          clearLogoutTimer();
-        };
-    }, [isLoggedIn, startLogoutTimer, clearLogoutTimer]);
+    if (isLoggedIn) {
+        startLogoutTimer();
+    }
+}, [isLoggedIn, startLogoutTimer]);
+
+useEffect(() => {
+    return () => {
+        clearLogoutTimer();
+    };
+}, [clearLogoutTimer]);
+
 
     
     
