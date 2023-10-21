@@ -11,13 +11,13 @@ import SearchBar from './components/Search/SearchBar';
 import MyNavbar from './components/common/navbar/Navbar'; 
 import DoctorProfile from './components/Users/Doctor/DoctorProfile';
 import PatientProfile from './components/Users/Patient/PatientProfile';
+import FileUploadPage from './components/MedicalRecords/UploadForm';
+
 import './App.css';
 
 function App() {
   
   const authContext = useContext(AuthContext);
-  console.log("authContext : ", authContext);
-
   const { startLogoutTimer, clearLogoutTimer } = useContext(AuthContext);
 
   useEffect(() => {
@@ -50,6 +50,8 @@ function App() {
               <Route path="/SearchBar" element={<SearchBar />} />
               <Route path="/DoctorProfile/:doctorId" element={<DoctorProfile/>} />
               <Route path="/PatientProfile/:patientId" element={<PatientProfile/>} />
+              <Route path="/MyDocs/" element={<FileUploadPage/>} />
+
             </Routes>
           </div>
         </div>
