@@ -16,8 +16,6 @@ import FileUploadPage from './components/MedicalRecords/UploadForm';
 import './App.css';
 
 function App() {
-  
-  const authContext = useContext(AuthContext);
   const { startLogoutTimer, clearLogoutTimer } = useContext(AuthContext);
 
   useEffect(() => {

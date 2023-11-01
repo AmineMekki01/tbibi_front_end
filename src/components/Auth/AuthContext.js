@@ -24,14 +24,12 @@ const AuthProvider = ({ children }) => {
     }, [setDoctorId, setPatientId, setIsLoggedIn, setUserType]);
 
     const startLogoutTimer = useCallback(() => {
-      console.log('startLogoutTimer called');
       setLogoutTimer(setTimeout(() => {
           logout();
       }, 15 * 60 * 1000));
   }, [logout]);
   
   const clearLogoutTimer = useCallback(() => {
-      console.log('clearLogoutTimer called', logoutTimer);
       if (logoutTimer) {
           clearTimeout(logoutTimer);
           setLogoutTimer(null);
