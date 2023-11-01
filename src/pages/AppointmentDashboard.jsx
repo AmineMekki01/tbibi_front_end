@@ -17,7 +17,6 @@ export default function Dashboard() {
     axios.get(`http://localhost:3001/api/v1/reservations?${queryParam}&timezone=${timezone}`)
 
         .then(response => {
-            console.log(response.data);
             setReservations(response.data);
         })
         .catch(error => {
@@ -30,8 +29,6 @@ export default function Dashboard() {
           <Title>My Upcoming Appointments</Title>
           <Flex>
           {reservations && reservations.map(reservation => (
-                
-                console.log("rese", reservation),
                   <CardCom
                     key={reservation.reservation_id}
                     duration={30} 
@@ -42,6 +39,7 @@ export default function Dashboard() {
                     userName={reservation.patient_first_name+" "+reservation.patient_last_name}
                     userAge={reservation.age}
                     userType={userType}
+                    doctorId={reservation.doctor_id}
                   />
                   
               ))}
