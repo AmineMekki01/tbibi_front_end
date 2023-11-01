@@ -18,8 +18,6 @@ import { useParams } from 'react-router-dom';
 export default function PatientProfile() {
 
   const { patientId } = useParams();
-  console.log("Patient ID from React:", patientId);
-
   const [patientInfo, setPatientInfo] = useState([]);
   const [loading, setLoading] = useState([]);
   const [error, setError] = useState([]);
@@ -81,7 +79,6 @@ export default function PatientProfile() {
           <Grid item lg={8}>
                 <Card className="mb-2">
                   <CardContent>
-                 
                               <Grid container spacing={3}>
                                   <Grid item sm={3}>
                                       <Typography>Full Name</Typography>
@@ -123,9 +120,9 @@ export default function PatientProfile() {
                                       </Typography>
                                   </Grid>
                               </Grid>
-                  
                   </CardContent>
                 </Card>
+                
                 <Card className='mb-2'>
                   <CardContent>
                     <Typography variant="h5" className="mb-3">Get to know me : </Typography>
@@ -134,28 +131,6 @@ export default function PatientProfile() {
                     </Typography>
                   </CardContent>
                 </Card>
-                <Grid container spacing={3}>
-                    {['Project Status 1', 'Project Status 2'].map((statusTitle, index) => (
-                        <Grid item md={6} key={index}>
-                            <Card className="mb-2 mb-md-0">
-                                <CardContent>
-                                    <Typography className="mb-4">
-                                        <span className="text-primary font-italic me-1">assignment</span> {statusTitle}
-                                    </Typography>
-                                    {['Web Design', 'Website Markup', 'One Page', 'Mobile Template', 'Backend API'].map((task, idx) => (
-                                        <React.Fragment key={idx}>
-                                            <Typography className="mb-1" style={{ fontSize: '.77rem' }}>{task}</Typography>
-                                            <LinearProgress variant="determinate" value={Math.random() * 100} className="mb-3" />
-                                        </React.Fragment>
-                                    ))}
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
-
-                
-            
             </Grid>
         </Grid>
       </Container>

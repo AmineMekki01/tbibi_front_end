@@ -165,11 +165,47 @@ export default function DoctorProfile() {
                   </CardContent>
                 </Card>
 
+                <Card className="mb-2">
+                  <CardContent>
+                    <Typography variant="h5" className="mb-3">Rates & Refunds : </Typography>
+                    <Grid container spacing={3}>
+                        <Grid item sm={6}>
+                            <Typography>RAMED : </Typography>
+                        </Grid>
+                        <Grid item sm={6}>
+                            <Typography className="text-muted"> YES
+                            </Typography>
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={3}>
+                        <Grid item sm={6}>
+                            <Typography>Accepted Insurance Plans : </Typography>
+                        </Grid>
+                        <Grid item sm={6}>
+                            <Typography className="text-muted"> X, Y, Z
+                            </Typography>
+                        </Grid>
+                    </Grid>
+
+                    <Grid container spacing={3}>
+                        <Grid item sm={6}>
+                            <Typography>Session Rate : </Typography>
+                        </Grid>
+                        <Grid item sm={6}>
+                            <Typography className="text-muted"> 300 DH
+                            </Typography>
+                        </Grid>
+                    </Grid>
+            
+                  </CardContent>
+                </Card>
+
                 <Card className='mb-2'>
                   <CardContent>
                     <Typography variant="h5" className="mb-3">Get to know me : </Typography>
                     <Typography className="text-muted mb-3">
-                      {doctorInfo.DoctorBio}
+                      {/* {doctorInfo.DoctorBio} */}
+                      Lorem ipsum is placeholder text commonly used in the graphic, print, and publishing industries for previewing layouts and visual mockups.
                     </Typography>
                   </CardContent>
                 </Card>
