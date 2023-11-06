@@ -1,16 +1,38 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 
-
 export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
+const AuthProvider = ({ children, navigate  }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'));
-    const [userType, setUserType] = useState(localStorage.getItem('userType') || 'patient');  // Default to 'patient'
+    const [userType, setUserType] = useState(localStorage.getItem('userType') || 'patient');
     const [doctorId, setDoctorId] = useState(localStorage.getItem('doctorId'));
     const [patientId, setPatientId] = useState(localStorage.getItem('patientId'));  
     const [userName, setUserName] = useState(null);
     const [userAge, setUserAge] = useState(null);
     const [logoutTimer, setLogoutTimer] = useState(null);
+
+
+    useEffect(() => {   
+        if (localStorage.getItem('token')) {
+            setIsLoggedIn(true);
+        }
+    }
+    , []);
+
+    useEffect(() => {
+        if (localStorage.getItem('userType')) {
+            setUserType(localStorage.getItem('userType'));
+        }
+    }   
+    , []);  
+
+    useEffect(() => {   
+        if (localStorage.getItem('doctorId')) {
+            setDoctorId(localStorage.getItem('doctorId'));
+        }
+    }
+    , []);
+
 
     const logout = useCallback(() => {
         localStorage.removeItem('token');
@@ -21,11 +43,16 @@ const AuthProvider = ({ children }) => {
         setPatientId(null);  
         setIsLoggedIn(false);
         setUserType(null); 
+
+        if (navigate) {
+            navigate('/login'); 
+        }
+
     }, [setDoctorId, setPatientId, setIsLoggedIn, setUserType]);
 
     const startLogoutTimer = useCallback(() => {
       setLogoutTimer(setTimeout(() => {
-          logout();
+          logout();   
       }, 15 * 60 * 1000));
   }, [logout]);
   
