@@ -9,7 +9,6 @@ import {
     Button,
     Container,
     Grid,
-    LinearProgress,
   } from '@mui/material';
 
 import profilePhoto from './../../../assets/images/profile_photo.jpeg';

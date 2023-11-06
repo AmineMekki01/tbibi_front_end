@@ -96,12 +96,46 @@ const PatientRegisterPage = () => {
         setValidPhone(result);
     }, [phone]);
 
+    useEffect(() => {
+        const requestInterceptor = axios.interceptors.request.use(request => {
+          console.log('Starting Request', JSON.stringify(request, null, 2));
+          return request;
+        });
+      
+        const responseInterceptor = axios.interceptors.response.use(response => {
+          console.log('Response:', JSON.stringify(response, null, 2));
+          return response;
+        });
+      
+        // Cleanup the interceptors on component unmount
+        return () => {
+          axios.interceptors.request.eject(requestInterceptor);
+          axios.interceptors.response.eject(responseInterceptor);
+        };
+      }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if(!validName || !validPwd || !validMatch || !validEmail || !validPhone) {
             setErrMsg('Invalid Entry');
             return;
         }
+        console.log('Submitting form with data:', {
+            Username: user,
+            Password: pwd,
+            Email: email,
+            PhoneNumber: phone,
+            FirstName: firstName,
+            LastName: lastName,
+            BirthDate: birthdate,
+            StreetAddress: address,
+            CityName: city,
+            StateName: state_name,
+            ZipCode: zipCode,
+            CountryName: country_name,
+            PatientBio: bio,
+            Sex: sex,
+        });
         try {
             const response = await axios.post('http://localhost:3001/api/v1/patients/register', {
                 Username: user,
@@ -118,14 +152,30 @@ const PatientRegisterPage = () => {
                 CountryName: country_name,
                 PatientBio: bio,
                 Sex: sex,
-            });
+            },{
+                headers: {
+                    'Content-Type': 'application/json'
+                  }
+            }
+            
+            );
             if(response.data.success) {
                 setSuccess(true);
             } else {
                 setErrMsg('Registration failed');
             }
         } catch (error) {
-            setErrMsg('Server error');
+            if (error.response) {
+                console.error('Error response:', error.response.data);
+                setErrMsg(error.response.data.message || 'Server error');
+            } else if (error.request) {
+                console.error('Error request:', error.request);
+                setErrMsg('No response from server');
+            } else {
+                console.error('Error message:', error.message);
+                setErrMsg('Error: ' + error.message);
+            }
+        
         }
     };
   
