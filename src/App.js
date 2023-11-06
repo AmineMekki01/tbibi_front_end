@@ -11,48 +11,38 @@ import SearchBar from './components/Search/SearchBar';
 import MyNavbar from './components/common/navbar/Navbar'; 
 import DoctorProfile from './components/Users/Doctor/DoctorProfile';
 import PatientProfile from './components/Users/Patient/PatientProfile';
-import FileUploadPage from './components/MedicalRecords/UploadForm';
-
+import FileManager from './pages/FileManager';
+import AccountVerified from './pages/AccountVerified';
 import './App.css';
+import NavigationProvider from './components/Auth/NavigationProvider';
+
+
 
 function App() {
-  const { startLogoutTimer, clearLogoutTimer } = useContext(AuthContext);
-
-  useEffect(() => {
-    const resetTimer = () => {
-      clearLogoutTimer();
-      startLogoutTimer();
-    };
-
-    window.addEventListener("click", resetTimer);
-    window.addEventListener("mousemove", resetTimer);
-
-    return () => {
-      window.removeEventListener("click", resetTimer);
-      window.removeEventListener("mousemove", resetTimer);
-    };
-  }, [startLogoutTimer, clearLogoutTimer]);
 
   return (
       <Router>
-        <div className="flex">
-          <MyNavbar />
-          <div className="ml-auto w-full scrollable-div">
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginForm />} />
-              <Route path="/register" element={<RegisterPage/>} />
-              <Route path="/register-doctor" element={<DoctorRegisterPage />} />
-              <Route path="/register-patient" element={<PatientRegisterPage />} />
-              <Route path="/patient-appointments" element={<AppointmentDashboard />} />
-              <Route path="/SearchBar" element={<SearchBar />} />
-              <Route path="/DoctorProfile/:doctorId" element={<DoctorProfile/>} />
-              <Route path="/PatientProfile/:patientId" element={<PatientProfile/>} />
-              <Route path="/MyDocs/" element={<FileUploadPage/>} />
-
-            </Routes>
+        <NavigationProvider>
+          <div className="flex">
+            <MyNavbar />
+            <div className="ml-auto w-full scrollable-div">
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/login" element={<LoginForm />} />
+                <Route path="/register" element={<RegisterPage/>} />
+                <Route path="/register-doctor" element={<DoctorRegisterPage />} />
+                <Route path="/register-patient" element={<PatientRegisterPage />} />
+                <Route path="/patient-appointments" element={<AppointmentDashboard />} />
+                <Route path="/SearchBar" element={<SearchBar />} />
+                <Route path="/DoctorProfile/:doctorId" element={<DoctorProfile/>} />
+                <Route path="/PatientProfile/:patientId" element={<PatientProfile/>} />
+                <Route path="/MyDocs/*" element={<FileManager/>} />
+                <Route path="/activate_account" element={<AccountVerified/>} />
+                
+              </Routes>
+            </div>
           </div>
-        </div>
+        </NavigationProvider>
       </Router>
   );
 }
