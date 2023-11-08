@@ -21,9 +21,11 @@ export const PathContainer = styled.div`
     margin-left: 20px;
     margin-right: 50px;
     text-align: left;
+    border: 1px solid #ddd;
+    padding: 3px 5px;
     span {
         font-size: 18px;    
-    }   
+    } 
 `;  
 
 export const CreateFolderContainer = styled.div`
@@ -41,10 +43,30 @@ export const CreateFolderButton = styled.button`
     border-radius: 5px;
     cursor: pointer;
     font-size: 18px;
-
+    margin-left: 10px;
     &:hover {
         background-color: #0069d9;
         border-color: #0062cc;
+    }   
+
+    @media (max-width: 768px) {
+        span {
+            display: none;
+        }
+    }
+`;
+export const DeleteFolderButton = styled.button`
+    background-color: #f45768;
+    border-color: #f45768;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+    &:hover {
+        background-color: #e24453;
+        border-color: #e24453;
     }   
 
     @media (max-width: 768px) {
