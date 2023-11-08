@@ -10,7 +10,9 @@ function FileManager() {
             <FileUploadHeader />
             <Routes>
                 <Route path="/" element={<></>} />
-                <Route path="Upload" element={<MyUploads />} />
+                <Route path="/Upload" element={<MyUploads />} />
+                <Route path="/Upload/:folderId" element={<MyUploads />} />
+
                 {/* <Route path="SharedWithMe" element={<SharedWithMe />} /> */}
             </Routes>
         </>
