@@ -1,201 +1,142 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { AuthContext } from './../Auth/AuthContext';
 import FolderIcon from '@mui/icons-material/Folder';
 import { useNavigate, useParams } from 'react-router-dom';
-import {FolderCardContainer, FolderCard, SubHeader, PathContainer, CreateFolderContainer, HeaderTitle, Container, CreateFolderButton, DeleteFolderButton} from './StyledComponents/MyDocsStyles';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder'
+import {
+  FolderCardContainer,
+  FolderCard,
+  SubHeader,
+  PathContainer,
+  CreateFolderContainer,
+  HeaderTitle,
+  Container,
+  CreateFolderButton,
+  DeleteFolderButton
+} from './StyledComponents/MyDocsStyles';
+import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
+import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder } from './routes/api'; // Importing from api.js
 
 function MyUploads() {
-    const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState(null);
-    const { doctorId, patientId, userType } = useContext(AuthContext);
-    const [selectedFolder, setSelectedFolder] = useState(null);
-    const [currentPath, setCurrentPath] = useState([]);
-    const [folders, setFolders] = useState([]);
-    const navigate = useNavigate();
-    const { folderId } = useParams();
-    const [folderName, setFolderName] = useState('');
-    const [breadcrumbs, setBreadcrumbs] = useState([]);
-    const [selectedFiles, setSelectedFiles] = useState(new Set());
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const { doctorId, patientId, userType } = useContext(AuthContext);
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [currentPath, setCurrentPath] = useState([]);
+  const [folders, setFolders] = useState([]);
+  const navigate = useNavigate();
+  const { folderId } = useParams();
+  const [breadcrumbs, setBreadcrumbs] = useState([]);
+  const [selectedFiles, setSelectedFiles] = useState(new Set());
+  const [folderName, setFolderName] = useState('');
 
 
+  const getUserId = () => {
+    return userType === 'doctor' ? doctorId : patientId;
+  };
 
-    const getUserId = () => {
-      return userType === 'doctor' ? doctorId : patientId;
-    };
+  const fetchFoldersByType = async (folderId) => {
+    setIsLoading(true);
+    setError(null);
+    const userId = getUserId();
 
-    const fetchFoldersByType = async (folderId) => {
-      setIsLoading(true);
-      setError(null);
+    try {
+      const data = await fetchFolders(userId, userType, folderId);
+      setFolders(Array.isArray(data) ? data : []);
 
-      const user_id = getUserId();
-      const user_type = userType;
-      const file_type = "folder";
-      let url = `http://localhost:3001/folders?user_id=${user_id}&user_type=${user_type}&file_type=${file_type}`;
-    
       if (folderId) {
-        url += `&parent_id=${folderId}`;
-      }
-    
-      let breadcrumbUrl = folderId ? `http://localhost:3001/folders/${folderId}/breadcrumbs` : `http://localhost:3001/folders/breadcrumbs`;
-    
-      try {
-        const response = await fetch(url);
-        const data = await response.json();
-    
-        if (response.ok) {
-          setFolders(Array.isArray(data) ? data : []);
-        } else {
-          throw new Error(data.error || 'Error fetching folders');
-        }
-    
-        if (folderId) {
-          const breadcrumbResponse = await fetch(breadcrumbUrl);
-          const breadcrumbData = await breadcrumbResponse.json();
-    
-          if (breadcrumbResponse.ok) {
-            setBreadcrumbs(breadcrumbData);
-          } else {
-            throw new Error(breadcrumbData.error || 'Error fetching breadcrumb data');
-          }
-        } else {
-          setBreadcrumbs([]);
-        }
-      } catch (error) {
-        setError(error.toString());
-        console.error('Error during folder fetch:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    useEffect(() => {
-      const newPath = currentPath.filter(id => id != null);
-      if (folderId && !newPath.includes(folderId)) {
-        newPath.push(folderId);
-      }
-      setCurrentPath(newPath);
-      fetchFoldersByType(folderId);
-      console.log("Current path after update:", newPath);
-      fetchBreadcrumbs(folderId);
-    }, [folderId]);
-
-    const fetchBreadcrumbs = async (folderId) => {
-      if (folderId) {
-        const breadcrumbUrl = `http://localhost:3001/folders/${folderId}/breadcrumbs`;
-        try {
-          const breadcrumbResponse = await fetch(breadcrumbUrl);
-          const breadcrumbData = await breadcrumbResponse.json();
-          if (breadcrumbResponse.ok) {
-            setBreadcrumbs(breadcrumbData);
-          } else {
-            throw new Error(breadcrumbData.error || 'Error fetching breadcrumb data');
-          }
-        } catch (error) {
-          setError(error.toString());
-          console.error('Error during breadcrumb fetch:', error);
-        }
+        const breadcrumbData = await fetchBreadcrumbs(folderId);
+        setBreadcrumbs(breadcrumbData);
       } else {
         setBreadcrumbs([]);
       }
-    };
-
-    const navigateToFolder = (subfolderId) => {
-      setCurrentPath(prev => {
-        const newPath = prev.filter(id => id != null); 
-        newPath.push(subfolderId);
-        return newPath;
-      });
-      navigate(`/MyDocs/Upload/${subfolderId}`);
-      fetchFoldersByType(subfolderId);
-    };
-
-    function viewFolder(folder) {
-    if (!folders) return;
-    setSelectedFolder(folder); 
-    };
-
-    
-
-    const onClickCreateFolder = async () => {
-      const name = prompt("Please enter folder name", "New Folder");
-      if (name) {
-        const parent_id = currentPath[currentPath.length - 1] || null;
-        const user_id = getUserId();
-        const file_type = "folder";
-        const user_type = userType;
-    
-        try {
-          const response = await fetch('http://localhost:3001/create-folder', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ name, user_id, file_type, user_type, parent_id }),
-          });
-    
-          const data = await response.json();
-          console.log('Response after creating a folder:', data); 
-          if (response.ok) {
-            fetchFolderContents(parent_id);
-          } else {
-            throw new Error(data.error || 'An error occurred while creating the folder');
-          }
-        } catch (error) {
-          console.error('Error creating folder:', error);
-        }
-      }
-    };
-
-    const fetchFolderContents = async (folderId) => {
-      fetchFoldersByType(folderId);
-    };
-
-    const navigateUp = () => {
-      const newPath = currentPath.slice(0, -1).filter(id => id != null);
-      const parentFolderId = newPath.at(-1) || '';
-      navigate(parentFolderId ? `/MyDocs/Upload/${parentFolderId}` : '/MyDocs/Upload');
-      setCurrentPath(newPath);
-    };
-
-
-    const toggleFileSelection = (fileId) => {
-      setSelectedFiles(prevSelectedFiles => {
-          const newSelection = new Set(prevSelectedFiles);
-          if (newSelection.has(fileId)) {
-              newSelection.delete(fileId);
-          } else {
-              newSelection.add(fileId);
-          }
-          return newSelection;
-      });
+    } catch (error) {
+      setError(error.toString());
+      console.error('Error during folder fetch:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const deleteSelectedFiles = async () => {
-      // Convert the selectedFiles Set to an Array
-      const filesToDelete = Array.from(selectedFiles);
-      try {
-          const response = await fetch('http://localhost:3001/delete-files', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({ filesToDelete }),
-          });
+  useEffect(() => {
+    const newPath = currentPath.filter(id => id != null);
+    if (folderId && !newPath.includes(folderId)) {
+      newPath.push(folderId);
+    }
+    setCurrentPath(newPath);
+    fetchFoldersByType(folderId);
+  }, [folderId]);
 
-          const data = await response.json();
-          console.log('Response after deleting files:', data);
-          if (response.ok) {
-              // Update the UI accordingly
-              setFolders(folders.filter(folder => !filesToDelete.includes(folder.folder_id)));
-              setSelectedFiles(new Set()); // Clear selection
-          } else {
-              throw new Error(data.error || 'An error occurred while deleting the files');
-          }
-      } catch (error) {
-          console.error('Error deleting files:', error);
+  const navigateToFolder = (subfolderId) => {
+    setCurrentPath(prevPath => {
+      const newPath = [...prevPath];
+      if (!newPath.includes(subfolderId)) {
+        newPath.push(subfolderId);
       }
+      return newPath;
+    });
+    navigate(`/MyDocs/Upload/${subfolderId}`);
+    fetchFoldersByType(subfolderId);
+  };
+
+  function viewFolder(folder) {
+    setSelectedFolder(folder.folder_id); 
+  };
+
+  const onClickCreateFolder = async () => {
+    const name = prompt("Please enter folder name", "New Folder");
+    if (name) {
+      const parent_id = currentPath[currentPath.length - 1] || null;
+      const userId = getUserId();
+
+      try {
+        await createFolder(name, userId, userType, parent_id);
+        fetchFoldersByType(parent_id);
+      } catch (error) {
+        console.error('Error creating folder:', error);
+      }
+    }
+  };
+
+  const navigateUp = () => {
+    const newPath = currentPath.slice(0, -1).filter(id => id != null);
+    const parentFolderId = newPath.at(-1) || '';
+    navigate(parentFolderId ? `/MyDocs/Upload/${parentFolderId}` : '/MyDocs/Upload');
+    setCurrentPath(newPath);
+  };
+
+  const toggleFileSelection = (folderId) => {
+    setSelectedFiles(prevSelectedFiles => {
+      const newSelection = new Set(prevSelectedFiles);
+      if (newSelection.has(folderId)) {
+        newSelection.delete(folderId);
+      } else {
+        newSelection.add(folderId);
+      }
+      return newSelection;
+    });
+  };
+
+  const deleteFolderAndContents = async () => {
+    const userConfirmation = window.confirm(
+      "Are you sure you want to delete the selected folders and all of their contents? This action cannot be undone."
+    );
+
+    if (!userConfirmation) {
+      return;
+    }
+
+    for (const folderId of selectedFiles) {
+      try {
+        await deleteFolder(folderId);
+        setFolders(prevFolders => prevFolders.filter(folder => folder.folder_id !== folderId));
+        const parent_id = currentPath[currentPath.length - 1] || null;
+        fetchFoldersByType(parent_id);
+      } catch (error) {
+        console.error('Error deleting folder:', error);
+      }
+    }
+    setSelectedFiles(new Set());
   };
 
     return (
@@ -222,7 +163,8 @@ function MyUploads() {
           <CreateFolderContainer > 
               <CreateFolderButton type="button" onClick={onClickCreateFolder}><CreateNewFolderIcon></CreateNewFolderIcon>
               </CreateFolderButton>
-              <DeleteFolderButton type="button" onClick={deleteSelectedFiles}><FolderDeleteIcon></FolderDeleteIcon>
+              <DeleteFolderButton type="button" onClick={() => deleteFolderAndContents(selectedFolder)}>
+                <FolderDeleteIcon />
               </DeleteFolderButton>
           </CreateFolderContainer>
         </SubHeader>
@@ -230,8 +172,9 @@ function MyUploads() {
           {Array.isArray(folders) && folders?.map((folder) => (
             <FolderCard key={folder.folder_id} className="col-md-4">
               <input
-              type="checkbox" checked={selectedFiles.has(folder.folder_id)}
-              onChange={() => toggleFileSelection(folder.folder_id)}/>
+                type="checkbox"
+                onChange={() => toggleFileSelection(folder.folder_id)}
+              />
 
                 <div className="card" onClick={() => navigateToFolder(folder.folder_id)}>
                   <div className="card-body">
