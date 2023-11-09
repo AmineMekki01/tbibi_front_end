@@ -49,3 +49,15 @@ export async function deleteFolder(folderId) {
     body: JSON.stringify({ folderId })
   });
 }
+
+
+export async function updateFolderName(folderId, name) {
+    const url = `${API_BASE_URL}/update-folder/${folderId}`;
+    const body = JSON.stringify({ name });
+  
+    return fetchWithErrors(url, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: body
+    });
+  }

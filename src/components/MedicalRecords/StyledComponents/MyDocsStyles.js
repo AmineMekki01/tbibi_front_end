@@ -19,7 +19,6 @@ export const HeaderTitle = styled.div`
 export const PathContainer = styled.div`    
     margin-top: 18px;
     margin-left: 20px;
-    margin-right: 50px;
     text-align: left;
     border: 1px solid #ddd;
     padding: 3px 5px;
@@ -28,9 +27,8 @@ export const PathContainer = styled.div`
     } 
 `;  
 
-export const CreateFolderContainer = styled.div`
+export const FolderHandlingContainer = styled.div`
     margin-top: 18px;
-    margin-left: 50px;  
     margin-right: 20px; 
     text-align: right;
 `;  
@@ -122,3 +120,26 @@ export const FolderCard = styled.div`
     }
   }
 `;
+
+
+export const RenameFolderButton  = styled.button`
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+    &:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }   
+
+    @media (max-width: 768px) {
+        span {
+            display: none;
+        }
+    }
+`;  
+

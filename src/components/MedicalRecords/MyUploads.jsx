@@ -7,15 +7,18 @@ import {
   FolderCard,
   SubHeader,
   PathContainer,
-  CreateFolderContainer,
+  FolderHandlingContainer,
   HeaderTitle,
   Container,
   CreateFolderButton,
-  DeleteFolderButton
+  DeleteFolderButton,
+  RenameFolderButton
 } from './StyledComponents/MyDocsStyles';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
-import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder } from './routes/api'; // Importing from api.js
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+
+import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder, updateFolderName } from './routes/api'; 
 
 function MyUploads() {
   const [isLoading, setIsLoading] = useState(false);
@@ -139,70 +142,103 @@ function MyUploads() {
     setSelectedFiles(new Set());
   };
 
-    return (
-      <Container>
-        <HeaderTitle>My Uploads</HeaderTitle>
-        <SubHeader>
-          <PathContainer>
-              <span>Root</span>
-              {breadcrumbs.map((crumb, index) => (
-                <span key={crumb.folder_id}>
-                  {' > '}
-                  <a onClick={() => navigateToFolder(crumb.folder_id)}>
-                    {crumb.name}
+  const onClickRenameFolder = async () => {
+    if (selectedFiles.size !== 1) {
+      alert("Please select exactly one folder to rename.");
+      return;
+    }
+  
+    const folderIdToRename = Array.from(selectedFiles)[0]; 
+    const currentFolderName = folders.find(folder => folder.folder_id === folderIdToRename)?.name;
+  
+    const newName = prompt("Please enter the new folder name", currentFolderName || "New Folder Name");
+    if (newName && newName.trim() !== "") {
+      try {
+        await updateFolderName(folderIdToRename, newName);
+        setFolders(folders.map(folder => {
+          if (folder.folder_id === folderIdToRename) {
+            return { ...folder, name: newName };
+          }
+          return folder;
+        }));
+        setSelectedFiles(new Set()); 
+      } catch (error) {
+        console.error('Error updating folder name:', error);
+      }
+    }
+  };
+
+  return (
+    <Container>
+      <HeaderTitle>My Uploads</HeaderTitle>
+      <SubHeader>
+        <PathContainer>
+            <span>Root</span>
+            {breadcrumbs.map((crumb, index) => (
+              <span key={crumb.folder_id}>
+                {' > '}
+                <a onClick={() => navigateToFolder(crumb.folder_id)}>
+                  {crumb.name}
+                </a>
+              </span>
+            ))}
+            {breadcrumbs.length > 0 && (
+              <span>
+                {' > '}
+                <a onClick={navigateUp}>Go Up</a>
+              </span>
+            )}
+        </PathContainer>
+        <FolderHandlingContainer> 
+            <CreateFolderButton type="button" onClick={onClickCreateFolder}><CreateNewFolderIcon></CreateNewFolderIcon>
+            </CreateFolderButton>
+            <DeleteFolderButton type="button" onClick={() => deleteFolderAndContents(selectedFolder)}>
+              <FolderDeleteIcon />
+            </DeleteFolderButton>
+            <RenameFolderButton
+              type="button"
+              onClick={onClickRenameFolder}
+              disabled={selectedFiles.size !== 1}
+            >
+              <DriveFileRenameOutlineIcon />
+            </RenameFolderButton>
+        </FolderHandlingContainer>
+      </SubHeader>
+      <FolderCardContainer>
+        {Array.isArray(folders) && folders?.map((folder) => (
+          <FolderCard key={folder.folder_id} className="col-md-4">
+            <input
+              type="checkbox"
+              onChange={() => toggleFileSelection(folder.folder_id)}
+            />
+          
+            <div className="card" onClick={() => navigateToFolder(folder.folder_id)}>
+              <div className="card-body">
+                  <i className="fa fa-folder-o">
+                  <FolderIcon sx={{ fontSize: 200 }} />
+                  </i>
+              </div>
+              <div className="card-footer">
+                  <h3>
+                  <a href="#" onClick={() => viewFolder(folder)}>
+                      {folder.name.substring(0, 20)}
+                      {folder.name.length > 20 ? "..." : ""}
                   </a>
-                </span>
-              ))}
-              {breadcrumbs.length > 0 && (
-                <span>
-                  {' > '}
-                  <a onClick={navigateUp}>Go Up</a>
-                </span>
-              )}
-          </PathContainer>
-          <CreateFolderContainer > 
-              <CreateFolderButton type="button" onClick={onClickCreateFolder}><CreateNewFolderIcon></CreateNewFolderIcon>
-              </CreateFolderButton>
-              <DeleteFolderButton type="button" onClick={() => deleteFolderAndContents(selectedFolder)}>
-                <FolderDeleteIcon />
-              </DeleteFolderButton>
-          </CreateFolderContainer>
-        </SubHeader>
-        <FolderCardContainer>
-          {Array.isArray(folders) && folders?.map((folder) => (
-            <FolderCard key={folder.folder_id} className="col-md-4">
-              <input
-                type="checkbox"
-                onChange={() => toggleFileSelection(folder.folder_id)}
-              />
+                  </h3>
+              </div>
+            </div>
+          </FolderCard>
+        ))}
+      </FolderCardContainer>
 
-                <div className="card" onClick={() => navigateToFolder(folder.folder_id)}>
-                  <div className="card-body">
-                      <i className="fa fa-folder-o">
-                      <FolderIcon sx={{ fontSize: 200 }} />
-                      </i>
-                  </div>
-                  <div className="card-footer">
-                      <h3>
-                      <a href="#" onClick={() => viewFolder(folder)}>
-                          {folder.name.substring(0, 20)}
-                          {folder.name.length > 20 ? "..." : ""}
-                      </a>
-                      </h3>
-                  </div>
-                </div>
-            </FolderCard>
-          ))}
-        </FolderCardContainer>
-
-        <form method="POST" action="/create-folder" id="form-create-folder">
-            <input type="hidden" name="name" value={folderName} required />
-            <input type="hidden" name="user_id" id="userId" required />
-            <input type="hidden" name="file_type" id="fileType" required />
-            <input type="hidden" name="user_type" id="userType" required />
-        </form>
-      </Container>
-    );
+      <form method="POST" action="/create-folder" id="form-create-folder">
+          <input type="hidden" name="name" value={folderName} required />
+          <input type="hidden" name="user_id" id="userId" required />
+          <input type="hidden" name="file_type" id="fileType" required />
+          <input type="hidden" name="user_type" id="userType" required />
+      </form>
+    </Container>
+  );
 }
 
 export default MyUploads;
