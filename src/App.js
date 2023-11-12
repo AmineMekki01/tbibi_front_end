@@ -1,7 +1,7 @@
 import React, {useContext, useEffect} from 'react';
 import { AuthContext } from './components/Auth/AuthContext';  
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './components/HomePage';
+import HomePage from './pages/HomePage';
 import LoginForm from './components/Auth/LoginForm';
 import DoctorRegisterPage from './components/Auth/RegisterDoctor';
 import PatientRegisterPage from './components/Auth/RegisterPatient';

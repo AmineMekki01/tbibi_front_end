@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import {RecoilRoot} from "recoil";
 
 // import './App.scss'
-import Testimonials from "./Testimonals/Testimonals";
+import Testimonials from "../components/Testimonals/Testimonals";
 
 import stetoImage from "./../assets/images/no_background_doc_steto.png";
 import stetoImageSized from "./../assets/images/no_small_background_doc_steto.png";
