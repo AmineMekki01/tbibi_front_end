@@ -12,7 +12,7 @@ async function fetchWithErrors(url, options = {}) {
 
 export async function fetchFolders(userId, userType, parentId = null) {
   const url = new URL(`${API_BASE_URL}/folders`);
-  const params = { user_id: userId, user_type: userType, file_type: 'folder' };
+  const params = { user_id: userId, user_type: userType};
   if (parentId) params.parent_id = parentId;
   url.search = new URLSearchParams(params).toString();
 

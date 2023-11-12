@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef  } from 'react';
 import { AuthContext } from './../Auth/AuthContext';
 import FolderIcon from '@mui/icons-material/Folder';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -12,13 +12,21 @@ import {
   Container,
   CreateFolderButton,
   DeleteFolderButton,
-  RenameFolderButton
+  RenameFolderButton,
+  ContainerFileImage,
+  UploadFolderButton
 } from './StyledComponents/MyDocsStyles';
+import { fileIconMapper } from './Helpers'; 
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import FolderDeleteIcon from '@mui/icons-material/FolderDelete';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
 import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder, updateFolderName } from './routes/api'; 
+const API_BASE_URL = 'http://localhost:3001';
+
 
 function MyUploads() {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,13 +40,14 @@ function MyUploads() {
   const [breadcrumbs, setBreadcrumbs] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState(new Set());
   const [folderName, setFolderName] = useState('');
+  const fileInputRef = useRef(null);
 
 
   const getUserId = () => {
     return userType === 'doctor' ? doctorId : patientId;
   };
 
-  const fetchFoldersByType = async (folderId) => {
+  const fetchAllFolder = async (folderId) => {
     setIsLoading(true);
     setError(null);
     const userId = getUserId();
@@ -62,24 +71,27 @@ function MyUploads() {
   };
 
   useEffect(() => {
-    const newPath = currentPath.filter(id => id != null);
+    const newPath = [...currentPath.filter(id => id !== null)];
     if (folderId && !newPath.includes(folderId)) {
       newPath.push(folderId);
     }
+    console.log('folderId : ', folderId)
     setCurrentPath(newPath);
-    fetchFoldersByType(folderId);
+    fetchAllFolder(folderId);
   }, [folderId]);
 
-  const navigateToFolder = (subfolderId) => {
-    setCurrentPath(prevPath => {
-      const newPath = [...prevPath];
-      if (!newPath.includes(subfolderId)) {
-        newPath.push(subfolderId);
-      }
-      return newPath;
-    });
-    navigate(`/MyDocs/Upload/${subfolderId}`);
-    fetchFoldersByType(subfolderId);
+  const navigateToFolder = (subfolderId, file_type) => {
+    if (file_type == 'folder' ) {
+      setCurrentPath(prevPath => {
+        const newPath = [...prevPath];
+        if (!newPath.includes(subfolderId)) {
+          newPath.push(subfolderId);
+        }
+        return newPath;
+      });
+      navigate(`/MyDocs/Upload/${subfolderId}`);
+      fetchAllFolder(subfolderId);
+    }
   };
 
   function viewFolder(folder) {
@@ -94,7 +106,7 @@ function MyUploads() {
 
       try {
         await createFolder(name, userId, userType, parent_id);
-        fetchFoldersByType(parent_id);
+        fetchAllFolder(parent_id);
       } catch (error) {
         console.error('Error creating folder:', error);
       }
@@ -102,6 +114,7 @@ function MyUploads() {
   };
 
   const navigateUp = () => {
+  
     const newPath = currentPath.slice(0, -1).filter(id => id != null);
     const parentFolderId = newPath.at(-1) || '';
     navigate(parentFolderId ? `/MyDocs/Upload/${parentFolderId}` : '/MyDocs/Upload');
@@ -134,7 +147,7 @@ function MyUploads() {
         await deleteFolder(folderId);
         setFolders(prevFolders => prevFolders.filter(folder => folder.folder_id !== folderId));
         const parent_id = currentPath[currentPath.length - 1] || null;
-        fetchFoldersByType(parent_id);
+        fetchAllFolder(parent_id);
       } catch (error) {
         console.error('Error deleting folder:', error);
       }
@@ -168,6 +181,49 @@ function MyUploads() {
     }
   };
 
+  const handleFileUpload = async (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      alert("Please select a file to upload.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('userId', getUserId());
+    formData.append('parentFolderId', currentPath[currentPath.length - 1] || '');
+    formData.append('userType', userType);
+    formData.append('fileType', 'file');
+    formData.append('fileName', file.name);
+    formData.append('fileSize', file.size)
+    formData.append('fileExt', file.name.split('.').pop())  
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/upload-file`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      
+      fetchAllFolder(currentPath[currentPath.length - 1]);
+      alert("File uploaded successfully!");
+      // empty the file
+      
+    } catch (error) {
+      console.error('Error uploading file:', error);
+      alert("Error uploading file: " + error.message);
+    }
+  };
+
+  const handleIconClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <Container>
       <HeaderTitle>My Uploads</HeaderTitle>
@@ -177,7 +233,7 @@ function MyUploads() {
             {breadcrumbs.map((crumb, index) => (
               <span key={crumb.folder_id}>
                 {' > '}
-                <a onClick={() => navigateToFolder(crumb.folder_id)}>
+                <a onClick={() => navigateToFolder(crumb.folder_id, crumb.file_type)}>
                   {crumb.name}
                 </a>
               </span>
@@ -189,35 +245,52 @@ function MyUploads() {
               </span>
             )}
         </PathContainer>
+        
         <FolderHandlingContainer> 
-            <CreateFolderButton type="button" onClick={onClickCreateFolder}><CreateNewFolderIcon></CreateNewFolderIcon>
-            </CreateFolderButton>
-            <DeleteFolderButton type="button" onClick={() => deleteFolderAndContents(selectedFolder)}>
-              <FolderDeleteIcon />
-            </DeleteFolderButton>
-            <RenameFolderButton
-              type="button"
-              onClick={onClickRenameFolder}
-              disabled={selectedFiles.size !== 1}
-            >
-              <DriveFileRenameOutlineIcon />
-            </RenameFolderButton>
+            
+          <UploadFolderButton>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileUpload}
+              style={{ display: 'none' }}
+            />
+            <FileUploadIcon onClick={handleIconClick} style={{ cursor: 'pointer' }} />
+          </UploadFolderButton>
+          <CreateFolderButton type="button" onClick={onClickCreateFolder}><CreateNewFolderIcon></CreateNewFolderIcon>
+          </CreateFolderButton>
+          <DeleteFolderButton type="button" onClick={() => deleteFolderAndContents(selectedFolder)}>
+            <FolderDeleteIcon />
+          </DeleteFolderButton>
+          <RenameFolderButton
+            type="button"
+            onClick={onClickRenameFolder}
+            disabled={selectedFiles.size !== 1}
+          >
+            <DriveFileRenameOutlineIcon />
+          </RenameFolderButton>
         </FolderHandlingContainer>
       </SubHeader>
       <FolderCardContainer>
-        {Array.isArray(folders) && folders?.map((folder) => (
+        {Array.isArray(folders) && folders?.map((folder) => {
+          const formattedPath = folder.path.replace(/\\/g, '/').replace('uploads/', '');
+          const imageUrl = `${API_BASE_URL}/files/${formattedPath}`;
+
+          return (
+          
           <FolderCard key={folder.folder_id} className="col-md-4">
             <input
               type="checkbox"
               onChange={() => toggleFileSelection(folder.folder_id)}
             />
           
-            <div className="card" onClick={() => navigateToFolder(folder.folder_id)}>
+            <div className="card" onClick={() => navigateToFolder(folder.folder_id, folder.file_type)}>
               <div className="card-body">
-                  <i className="fa fa-folder-o">
-                  <FolderIcon sx={{ fontSize: 200 }} />
-                  </i>
+                <i className="fa fa-folder-o">
+                  {fileIconMapper(folder.file_type === 'folder' ? 'folder' : folder.extension, imageUrl)}
+                </i>
               </div>
+
               <div className="card-footer">
                   <h3>
                   <a href="#" onClick={() => viewFolder(folder)}>
@@ -228,7 +301,8 @@ function MyUploads() {
               </div>
             </div>
           </FolderCard>
-        ))}
+          );	
+        })}
       </FolderCardContainer>
 
       <form method="POST" action="/create-folder" id="form-create-folder">

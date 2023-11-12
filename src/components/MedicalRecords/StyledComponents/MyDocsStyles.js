@@ -143,3 +143,38 @@ export const RenameFolderButton  = styled.button`
     }
 `;  
 
+export const ContainerFileImage = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+    background-color: #fff;
+    height : 100%;
+    img {
+        
+        height: 200px;
+        width: auto;
+    }
+
+    `;
+
+export const UploadFolderButton = styled.button`
+ background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+    &:hover {
+        background-color: #0069d9;
+        border-color: #0062cc;
+    }   
+
+    @media (max-width: 768px) {
+        span {
+            display: none;
+        }
+    }
+
+`;
