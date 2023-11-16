@@ -24,7 +24,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 
-import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder, updateFolderName } from './routes/api'; 
+import { fetchFolders, fetchBreadcrumbs, createFolder, deleteFolder, updateFolderName, downloadFile} from './routes/api'; 
 const API_BASE_URL = 'http://localhost:3001';
 
 
@@ -41,6 +41,7 @@ function MyUploads() {
   const [selectedFiles, setSelectedFiles] = useState(new Set());
   const [folderName, setFolderName] = useState('');
   const fileInputRef = useRef(null);
+  const [selectedFileId, setSelectedFileId] = useState(null);
 
 
   const getUserId = () => {
@@ -126,8 +127,10 @@ function MyUploads() {
       const newSelection = new Set(prevSelectedFiles);
       if (newSelection.has(folderId)) {
         newSelection.delete(folderId);
+        setSelectedFileId(null);
       } else {
         newSelection.add(folderId);
+        setSelectedFileId(folderId);
       }
       return newSelection;
     });
@@ -224,6 +227,22 @@ function MyUploads() {
     fileInputRef.current.click();
   };
 
+  const handleDownload = async (fileId) => {
+    try {
+      const fileBlob = await downloadFile(fileId);
+      const downloadUrl = window.URL.createObjectURL(fileBlob);
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = "downloadedFile"; // You can give the file a name here
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error during file download:', error);
+    }
+  };
+
   return (
     <Container>
       <HeaderTitle>My Uploads</HeaderTitle>
@@ -247,7 +266,8 @@ function MyUploads() {
         </PathContainer>
         
         <FolderHandlingContainer> 
-            
+        <button onClick={() => selectedFileId && handleDownload(selectedFileId)}>Download</button>
+
           <UploadFolderButton>
             <input
               type="file"
@@ -281,6 +301,7 @@ function MyUploads() {
           <FolderCard key={folder.folder_id} className="col-md-4">
             <input
               type="checkbox"
+              checked={selectedFiles.has(folder.folder_id)}
               onChange={() => toggleFileSelection(folder.folder_id)}
             />
           
