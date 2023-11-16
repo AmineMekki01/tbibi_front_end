@@ -15,7 +15,7 @@ import FileManager from './pages/FileManager';
 import AccountVerified from './pages/AccountVerified';
 import './App.css';
 import NavigationProvider from './components/Auth/NavigationProvider';
-
+import ChatbotChat from './pages/Chatbot';
 
 
 function App() {
@@ -38,6 +38,7 @@ function App() {
                 <Route path="/PatientProfile/:patientId" element={<PatientProfile/>} />
                 <Route path="/MyDocs/*" element={<FileManager/>} />
                 <Route path="/activate_account" element={<AccountVerified/>} />
+                <Route path="/Chatbot" element={<ChatbotChat />} />
                 
               </Routes>
             </div>
