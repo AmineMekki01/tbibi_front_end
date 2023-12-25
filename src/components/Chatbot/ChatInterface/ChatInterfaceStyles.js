@@ -123,3 +123,36 @@ export const ChatInterfaceSubmitButton = styled.button`
 `;
 
 
+
+
+
+export const FileUploadButton = styled.button`
+    background: #121F49;
+    color: #fff;
+    font-size: 20px;
+    padding: 10px;
+    width: 120px;
+    border: 0;
+`;
+
+
+export const FilesUploadTitle = styled.div`
+ 
+    padding: 10px;
+    border: 0;
+    font-size: 20px;
+    &:focus {
+        outline: none;
+    }
+    width: 70%;
+    margin: 0 auto;
+`;
+
+export const FileUploadContainer = styled.div`
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+`;
