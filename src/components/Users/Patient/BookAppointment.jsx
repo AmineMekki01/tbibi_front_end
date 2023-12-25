@@ -58,6 +58,24 @@ function BookAppointment({show}) {
     setSelectedSlot(slot);
   };
 
+  const fetchAvailabilities = () => {
+    const dateString = selectedDate.toISOString().split('T')[0];
+    const currentTime = new Date().toISOString();
+    axios.get(`http://localhost:3001/api/v1/availabilities?doctorId=${urlDoctorId}&day=${dateString}&currentTime=${currentTime}&timeZone=${timeZone}`)
+      .then(response => {
+        console.log("Received availability: ", response.data); 
+        setAvailability(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+  
+  useEffect(() => {
+    fetchAvailabilities();
+  }, [urlDoctorId, selectedDate, timeZone]);
+  
+
   const handleBookAppointment = () => {
     const reservationDetails = {
       AppointmentStart: selectedSlot.AvailabilityStart,
@@ -66,13 +84,15 @@ function BookAppointment({show}) {
       DoctorID: urlDoctorId,  
       PatientID: patientId,  
       AvailabilityID: selectedSlot.AvailabilityId,
-    };
-    console.log("reservationDetails: ", reservationDetails);  
-    
+    };    
 
     axios.post('http://localhost:3001/api/v1/reservations', reservationDetails)
     .then(response => {
       alert('Appointment booked successfully!');
+      fetchAvailabilities();  // Refetch the updated availabilities
+      setSelectedSlot(null);
+    
+      
     })
     .catch(error => {
       console.error(error);

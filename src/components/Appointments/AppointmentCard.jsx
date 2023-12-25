@@ -23,9 +23,8 @@ const bull = (
   </Box>
 );
 export default function CardCom({duration, appointment_start, appointment_finish, doctor_name, doctor_specialty, userName, userAge, userType, doctorId}) {
-
-  // Prepare the data to share
   const prepareDataToShare = () => {
+    console.log("prepareDataToShare : problem is after here ")
     const data = `
       Duration: ${duration} Minutes
       Day: ${appointment_start.split("T")[0]}
@@ -33,46 +32,50 @@ export default function CardCom({duration, appointment_start, appointment_finish
       Doctor Name: ${doctor_name}
       Doctor Specialty: ${doctor_specialty}
     `;
+    console.log("prepareDataToShare : problem is before here ")
+    console.log("data:", data);
     return data;
   }
 
-  // Create an ICS file so as the user can add the appointment to his calendar
+  const createICSContent = ({start, end, title, description}) => {
+    const formatDate = (date) => date.toISOString().replace(/-|:|\.\d{3}/g, '');
+    return [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'BEGIN:VEVENT',
+      `SUMMARY:${title}`,
+      `DTSTART:${formatDate(start)}`,
+      `DTEND:${formatDate(end)}`,
+      `DESCRIPTION:${description.replace(/\n/g, '\\n')}`,
+      'END:VEVENT',
+      'END:VCALENDAR'
+    ].join('\r\n');
+  };
+
   const createICSFile = () => {
-    const start = appointment_start.split("T")[0].split('-').map(Number);
-    const end = appointment_finish.split("T")[0].split('-').map(Number);
-  
-    createEvent({
+    // Parse the appointment times
+    const start = new Date(appointment_start);
+    const end = new Date(appointment_finish);
+
+    // Create ICS content
+    const icsContent = createICSContent({
       start,
       end,
       title: `Appointment with ${doctor_name}`,
-      description: prepareDataToShare(),
-    }, (error, value) => {
-      if (error) {
-        console.log("Error in createEvent:", error);
-        return;
-      }
-      console.log("Generated ICS value:", value);
-  
-      // Creating blob from the ICS string
-      const blob = new Blob([value], { type: 'text/calendar' });
-  
-      // Creating an object URL for the blob
-      const url = window.URL.createObjectURL(blob);
-  
-      // Creating a temporary anchor tag and simulate a click
-      const a = document.createElement('a');
-      a.style.display = 'none';
-      a.href = url;
-      a.download = `appointment_with_${doctor_name}.ics`;
-  
-      // Append the anchor to the DOM to start the download when the button is clicked
-      document.body.appendChild(a);
-      a.click();
-  
-      // Clean up
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
+      description: prepareDataToShare()
     });
+
+    // Create and trigger a download of the ICS file
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = `appointment_with_${doctor_name}.ics`;
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
   };
 
   const shareData = () => {
@@ -98,9 +101,7 @@ export default function CardCom({duration, appointment_start, appointment_finish
     }
   }
 
-  const navigate = useNavigate(); // <--- instantiate useHistory
-
-  // Navigate to Doctor Profile
+  const navigate = useNavigate();
   const goToDoctorProfile = () => {
     navigate(`/DoctorProfile/${doctorId}`);
   };
