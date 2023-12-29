@@ -63,8 +63,13 @@ export async function updateFolderName(folderId, name) {
 }
 
 export async function downloadFile(fileId) {
-  const url = `${API_BASE_URL}/download-file/${fileId}`;
-  const response = await fetch(url); 
+  const url = `${API_BASE_URL}/download-file/${fileId}`
+  const response = await fetch(url, {
+    method: 'GET',
+    headers: {
+    },
+    redirect: 'follow' // This will follow any redirects
+  });  console.log([...response.headers]); // Log all response headers
 
   if (!response.ok) {
     throw new Error('File download failed');

@@ -42,6 +42,8 @@ function MyUploads() {
   const [folderName, setFolderName] = useState('');
   const fileInputRef = useRef(null);
   const [selectedFileId, setSelectedFileId] = useState(null);
+  const [doctors, setDoctors] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
 
 
   const getUserId = () => {
@@ -228,6 +230,7 @@ function MyUploads() {
   };
 
   const handleDownload = async (fileId) => {
+    console.log(`Downloading file with ID: ${fileId}`);
     try {
       const fileBlob = await downloadFile(fileId);
       const downloadUrl = window.URL.createObjectURL(fileBlob);
@@ -242,7 +245,58 @@ function MyUploads() {
       console.error('Error during file download:', error);
     }
   };
+  const shareFolder = async (folderId, doctorId) => {
+    if (!doctorId) {
+      alert('Please select a doctor to share with.');
+      return;
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/v1/share`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          itemIDs: [folderId],
+          sharedWithID: doctorId,
+          userID: getUserId(),
+          userType: userType,
+        }),
+      });
 
+      if (response.ok) {
+        alert('Folder shared successfully!');
+      } else {
+        throw new Error('Failed to share folder');
+      }
+    } catch (error) {
+      console.error('Error sharing folder:', error);
+      alert('Error sharing folder: ' + error.message);
+    }
+  };
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/v1/doctors`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch doctors');
+        }
+        const data = await response.json();
+        console.log('data : ', data)
+        setDoctors(data); 
+      } catch (error) {
+        console.error('Error fetching doctors:', error);
+      }
+    };
+
+    fetchDoctors();
+  }, []);
   return (
     <Container>
       <HeaderTitle>My Uploads</HeaderTitle>
@@ -289,6 +343,27 @@ function MyUploads() {
           >
             <DriveFileRenameOutlineIcon />
           </RenameFolderButton>
+          {/* Sharing UI */}
+          {selectedFiles.size === 1 && userType === 'patient' && (
+            <div>
+              <select
+                value={selectedDoctor}
+                onChange={(e) => setSelectedDoctor(e.target.value)}
+              >
+                <option value="">Select a Doctor</option>
+                {doctors.map((doctor) => (
+                  <option key={doctor.id} value={doctor.DoctorId}>
+                    {doctor.FirstName} {doctor.LastName}
+                  </option>
+                ))}
+              </select>
+              <button
+                onClick={() => shareFolder(Array.from(selectedFiles)[0], selectedDoctor)}
+              >
+                Share with Doctor
+              </button>
+            </div>
+          )}
         </FolderHandlingContainer>
       </SubHeader>
       <FolderCardContainer>

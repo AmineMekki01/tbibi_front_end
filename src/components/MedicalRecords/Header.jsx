@@ -54,6 +54,9 @@ function FileUploadHeader() {
           <NavItem>
             <Link to="/MyDocs/SharedWithMe">Shared with me</Link>
           </NavItem>
+          <NavItem>
+            <Link to="/MyDocs/ISharedWith">I shared with</Link>
+          </NavItem>
         </NavList>
       </Navbar>
     );

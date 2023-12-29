@@ -80,12 +80,19 @@ export const FolderCardContainer = styled.div`
     flex-wrap: wrap;
     justify-content: space-between;
     justify-content: center;
+    margin-top: 30px;
 `;
 
 
 export const FolderCard = styled.div`
   margin-top: 30px;
-  width: 300px;
+  width: 320px;
+  max-width: 320px;
+  min-width: 320px;
+  height; 320px;
+  max-height: 320px;
+  min-height: 320px;
+
   text-align: center;
   margin: 10px;
 
@@ -97,21 +104,21 @@ export const FolderCard = styled.div`
     transition: box-shadow 0.3s ease-in-out;
 
     &:hover {
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
 
     .card-body {
-      padding: 20px;
-      i {
-        font-size: 100px;
-        color: #f0ad4e; // Folder icon color
-      }
+        height: 250px;
+        i {
+            font-size: 100px;
+            color: #f0ad4e;
+        }
     }
 
     .card-footer {
       background: #f8f9fa;
       border-top: 1px solid #ddd;
-      padding: 10px 20px;
+      height: 50px;
       h3 {
         margin: 0;
         font-size: 1.25rem;

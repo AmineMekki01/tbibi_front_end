@@ -5,7 +5,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import AudioFileIcon from '@mui/icons-material/AudioFile';
 import ArticleIcon from '@mui/icons-material/Article';
 import VideoFileIcon from '@mui/icons-material/VideoFile';
-import { ca } from 'date-fns/locale';
+import styled from 'styled-components';
 
 const iconColors = {
     folder: "#f39c12", // example color for folders
@@ -16,6 +16,12 @@ const iconColors = {
     default: "#95a5a6" // default color
 };
 
+export const CardImage = styled.img`
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;
+`;
+
 export const fileIconMapper = (extension, imageUrl) => {
     let color;
     switch (extension) {
@@ -24,7 +30,7 @@ export const fileIconMapper = (extension, imageUrl) => {
         return <FolderIcon sx={{ fontSize: 200, color }} />;
     case 'jpeg':
     case 'jpg':
-        return <img src={imageUrl} alt="folder" />;
+        return <CardImage src={imageUrl} alt="folder" />;
     case 'pdf':
         color = iconColors.pdf;
         return <PictureAsPdfIcon sx={{ fontSize: 200, color  }} />;
