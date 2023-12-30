@@ -99,6 +99,7 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
+
     background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
@@ -108,6 +109,9 @@ export const Button = styled.button`
     &:hover {
         background-color: #45a049;
     }
+
+    width: fit-content;
+    margin: 5px auto;
 `;
 
 export const Textarea = styled.textarea`
@@ -179,4 +183,16 @@ export const CheckboxCustom = styled.span`
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
+`;
+
+export const ContentWrapper = styled.div`
+  display : flex;
+  flex-direction: column;
+
+  Button {
+    width: fit-content;
+    margin: auto;
+    max-width: 200px;
+  }
+    
 `;

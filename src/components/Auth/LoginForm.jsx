@@ -23,7 +23,7 @@ const LoginForm = () => {
         const url = localUserType === 'doctor' 
         ? 'http://localhost:3001/api/v1/doctors/login' 
         : 'http://localhost:3001/api/v1/patients/login';
-
+ 
     const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -52,6 +52,12 @@ const LoginForm = () => {
             alert('Invalid credentials');
         }
     };
+
+
+    const handleForgotPassword = () => {
+        navigate('/forgot-password'); 
+    };
+
     return (
         <ContainerLogin>
             <FormWrapper>
@@ -99,6 +105,9 @@ const LoginForm = () => {
                     </div>
                     <div className='flex justify-center items-center mt-6'>
                         <Button>Login</Button>
+                        <button type="button" onClick={handleForgotPassword} className='text-blue-600 underline'>
+                            Forgot Password ?
+                        </button>
                     </div>
                 </form>
                 <p className='text-center mb-4'>

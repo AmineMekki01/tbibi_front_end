@@ -16,7 +16,8 @@ import AccountVerified from './pages/AccountVerified';
 import './App.css';
 import NavigationProvider from './components/Auth/NavigationProvider';
 import ChatbotChat from './pages/Chatbot';
-
+import ForgotPasswordForm from './components/Auth/ForgotPasswordForm';
+import ResetPasswordForm from './components/Auth/ResetPasswordPage';
 
 function App() {
 
@@ -38,6 +39,8 @@ function App() {
                 <Route path="/PatientProfile/:patientId" element={<PatientProfile/>} />
                 <Route path="/MyDocs/*" element={<FileManager/>} />
                 <Route path="/activate_account" element={<AccountVerified/>} />
+                <Route path="/forgot-password" element={<ForgotPasswordForm/>} />
+                <Route path="/reset-password" element={<ResetPasswordForm />} />
                 <Route path="/Chatbot" element={<ChatbotChat />} />
                 
               </Routes>
