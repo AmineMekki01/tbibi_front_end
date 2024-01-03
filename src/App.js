@@ -18,6 +18,7 @@ import NavigationProvider from './components/Auth/NavigationProvider';
 import ChatbotChat from './pages/Chatbot';
 import ForgotPasswordForm from './components/Auth/ForgotPasswordForm';
 import ResetPasswordForm from './components/Auth/ResetPasswordPage';
+import ChatPage from './pages/ChatPage';
 
 function App() {
 
@@ -42,7 +43,7 @@ function App() {
                 <Route path="/forgot-password" element={<ForgotPasswordForm/>} />
                 <Route path="/reset-password" element={<ResetPasswordForm />} />
                 <Route path="/Chatbot" element={<ChatbotChat />} />
-                
+                <Route path="/Messages" element={<ChatPage />} />
               </Routes>
             </div>
           </div>
